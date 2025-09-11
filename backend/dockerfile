@@ -1,0 +1,17 @@
+# This file should be at: /sentinel-go-mvp/backend/Dockerfile
+FROM golang:1.24-alpine
+
+WORKDIR /app
+
+# Copy the module files, which are now in the root of the backend context
+COPY go.mod go.sum ./
+
+# Download the Go dependencies
+RUN go mod download
+
+# Copy the rest of your backend source code
+# This includes the 'src' directory, GeoIP database, and main.go
+COPY . .
+
+# The default command now runs the main.go file from the root
+CMD ["go", "run", "main.go"]

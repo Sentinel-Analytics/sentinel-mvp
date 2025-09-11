@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Sentinel</title>
+    <style>
+        body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #f9fafb; margin: 0; }
+        .form-container { background: white; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #1f2937; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        input[type="email"], input[type="password"] { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; box-sizing: border-box; }
+        input[type="submit"] { width: 100%; padding: 0.75rem; border: none; border-radius: 0.375rem; background-color: #2563eb; color: white; font-weight: bold; cursor: pointer; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Sign Up for Sentinel</h2>
+        <form action="/auth/signup" method="post">
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div style="margin-top: 1rem;">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+</body>
+</html>
