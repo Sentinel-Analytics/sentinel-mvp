@@ -37,6 +37,6 @@ RUN chmod +x ./sentinel
 # The ca-certificates package is needed for secure outbound connections
 RUN apk --no-cache add ca-certificates
 
-EXPOSE 8000
+EXPOSE 7070
 ENTRYPOINT ["./sentinel"]
 
