@@ -42,8 +42,8 @@ func main() {
 	})
 	handler := c.Handler(mux)
 
-	log.Println("Sentinel Go server starting on :8000")
-	if err := http.ListenAndServe(":8000", handler); err != nil {
+	log.Println("Sentinel Go server starting on :7070")
+	if err := http.ListenAndServe(":7070", handler); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
 }
