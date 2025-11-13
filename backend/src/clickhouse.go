@@ -21,6 +21,8 @@ func InitClickHouse() {
 			Addr: []string{"clickhouse:9000"},
 			Auth: clickhouse.Auth{
 				Database: "sentinel",
+				Username: "sentinel",
+				Password: "password",
 			},
 			Settings: clickhouse.Settings{
 				"max_execution_time": 60,
