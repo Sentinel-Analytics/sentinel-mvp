@@ -1,1 +1,1 @@
-{"error": "Could not create user (email might be taken)"}
+API request to /auth/signup failed: ht {message: 'Request failed with status code 400', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}email=mail%40mail.com&password=Amaniel%404

@@ -20,24 +20,23 @@ const Dashboard = () => {
   const [authLoading, setAuthLoading] = useState(true)
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Try to fetch sites to verify authentication
+        await api.getSites()
+        setIsAuthenticated(true)
+        fetchSites()
+      } catch (error) {
+        console.error("Authentication check failed:", error)
+        setIsAuthenticated(false)
+        // Redirect to login if not authenticated
+        window.location.href = "/login"
+      } finally {
+        setAuthLoading(false)
+      }
+    }
     checkAuth()
   }, [])
-
-  const checkAuth = async () => {
-    try {
-      // Try to fetch sites to verify authentication
-      await api.getSites()
-      setIsAuthenticated(true)
-      fetchSites()
-    } catch (error) {
-      console.error("Authentication check failed:", error)
-      setIsAuthenticated(false)
-      // Redirect to login if not authenticated
-      window.location.href = "/login"
-    } finally {
-      setAuthLoading(false)
-    }
-  }
 
   const fetchSites = async () => {
     try {

@@ -22,26 +22,18 @@ const request = async (config) => {
 
 export const api = {
   login: (email, password) => {
-    const formData = new URLSearchParams();
-    formData.append("email", email);
-    formData.append("password", password);
     return request({
       url: "/auth/login",
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      data: formData,
+      data: { email, password },
     });
   },
 
   signup: (email, password) => {
-    const formData = new URLSearchParams();
-    formData.append("email", email);
-    formData.append("password", password);
     return request({
       url: "/auth/signup",
       method: "POST",
-      headers: { "Content-Type": "application/x--form-urlencoded" },
-      data: formData,
+      data: { email, password },
     });
   },
 
