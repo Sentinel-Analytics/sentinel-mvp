@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000"
+const API_URL = "https://api-sentinel.getmusterup.com/"
 
 const request = async (endpoint, options = {}) => {
   const defaultOptions = {
