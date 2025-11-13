@@ -1,37 +1,8 @@
-025/11/13 02:53:10 Database tables are set up.
-2025/11/13 02:53:10 Error pinging ClickHouse: dial tcp 172.25.0.3:9000: connect: connection refused. Retrying in 3 seconds...
-2025/11/13 02:53:13 Error pinging ClickHouse: code: 516, message: default: Authentication failed: password is incorrect, or there is no user with such name.
-If you use ClickHouse Cloud, the password can be reset at https://clickhouse.cloud/
-on the settings page for the corresponding service.
-If you have installed ClickHouse and forgot password you can reset it in the configuration file.
-The password for default user is typically located at /etc/clickhouse-server/users.d/default-password.xml
-and deleting this file will reset the password.
-See also /etc/clickhouse-server/users.xml on the server where ClickHouse is installed.. Retrying in 3 seconds...
-2025/11/13 02:53:16 Error pinging ClickHouse: code: 516, message: default: Authentication failed: password is incorrect, or there is no user with such name.
-If you use ClickHouse Cloud, the password can be reset at https://clickhouse.cloud/
-on the settings page for the corresponding service.
-If you have installed ClickHouse and forgot password you can reset it in the configuration file.
-The password for default user is typically located at /etc/clickhouse-server/users.d/default-password.xml
-and deleting this file will reset the password.
-See also /etc/clickhouse-server/users.xml on the server where ClickHouse is installed.. Retrying in 3 seconds...
-2025/11/13 02:53:19 Error pinging ClickHouse: code: 516, message: default: Authentication failed: password is incorrect, or there is no user with such name.
-If you use ClickHouse Cloud, the password can be reset at https://clickhouse.cloud/
-on the settings page for the corresponding service.
-If you have installed ClickHouse and forgot password you can reset it in the configuration file.
-The password for default user is typically located at /etc/clickhouse-server/users.d/default-password.xml
-and deleting this file will reset the password.
-See also /etc/clickhouse-server/users.xml on the server where ClickHouse is installed.. Retrying in 3 seconds...
-2025/11/13 02:53:22 Error pinging ClickHouse: code: 516, message: default: Authentication failed: password is incorrect, or there is no user with such name.
-If you use ClickHouse Cloud, the password can be reset at https://clickhouse.cloud/
-on the settings page for the corresponding service.
-If you have installed ClickHouse and forgot password you can reset it in the configuration file.
-The password for default user is typically located at /etc/clickhouse-server/users.d/default-password.xml
-and deleting this file will reset the password.
-See also /etc/clickhouse-server/users.xml on the server where ClickHouse is installed.. Retrying in 3 seconds...
-2025/11/13 02:53:25 Could not connect to ClickHouse after several retries: code: 516, message: default: Authentication failed: password is incorrect, or there is no user with such name.
-If you use ClickHouse Cloud, the password can be reset at https://clickhouse.cloud/
-on the settings page for the corresponding service.
-If you have installed ClickHouse and forgot password you can reset it in the configuration file.
-The password for default user is typically located at /etc/clickhouse-server/users.d/default-password.xml
-and deleting this file will reset the password.
-See also /etc/clickhouse-server/users.xml on the server where ClickHouse is installed.
+2025/11/13 02:56:25 Successfully connected to the database.
+2025/11/13 02:56:25 Database tables are set up.
+2025/11/13 02:56:25 Error pinging ClickHouse: dial tcp 172.25.0.3:9000: connect: connection refused. Retrying in 3 seconds...
+2025/11/13 02:56:28 Error pinging ClickHouse: code: 81, message: Database sentinel does not exist. Retrying in 3 seconds...
+2025/11/13 02:56:31 Error pinging ClickHouse: code: 81, message: Database sentinel does not exist. Retrying in 3 seconds...
+2025/11/13 02:56:34 Error pinging ClickHouse: code: 81, message: Database sentinel does not exist. Retrying in 3 seconds...
+2025/11/13 02:56:37 Error pinging ClickHouse: code: 81, message: Database sentinel does not exist. Retrying in 3 seconds...
+2025/11/13 02:56:40 Could not connect to ClickHouse after several retries: code: 81, message: Database sentinel does not exist
