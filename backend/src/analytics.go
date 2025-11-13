@@ -94,6 +94,14 @@ type CountStat struct {
 	Count int    `json:"count"`
 }
 
+// @Summary Track a new event
+// @Description Track a new page view event.
+// @Tags analytics
+// @Accept  json
+// @Produce  json
+// @Param event body Event true "Event to track"
+// @Success 200 {object} map[string]string
+// @Router /track [post]
 func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -146,6 +154,14 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 }
 
+// @Summary Get dashboard stats
+// @Description Get dashboard stats for a site.
+// @Tags analytics
+// @Produce  json
+// @Param siteId query string true "Site ID"
+// @Param days query int false "Number of days to get stats for"
+// @Success 200 {object} Stats
+// @Router /api/dashboard [get]
 func DashboardApiHandler(w http.ResponseWriter, r *http.Request) {
 	siteID := r.URL.Query().Get("siteId")
 	if siteID == "" {

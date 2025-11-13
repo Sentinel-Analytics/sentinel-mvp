@@ -1,0 +1,199 @@
+basePath: /
+definitions:
+  sentinel.CountStat:
+    properties:
+      count:
+        type: integer
+      value:
+        type: string
+    type: object
+  sentinel.Event:
+    properties:
+      referrer:
+        type: string
+      screenWidth:
+        type: integer
+      siteId:
+        type: string
+      url:
+        type: string
+    type: object
+  sentinel.Site:
+    properties:
+      domain:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+  sentinel.Stats:
+    properties:
+      avgVisitDuration:
+        type: string
+      bounceRate:
+        type: integer
+      topBrowsers:
+        items:
+          $ref: '#/definitions/sentinel.CountStat'
+        type: array
+      topCountries:
+        items:
+          $ref: '#/definitions/sentinel.CountStat'
+        type: array
+      topOS:
+        items:
+          $ref: '#/definitions/sentinel.CountStat'
+        type: array
+      topPages:
+        items:
+          $ref: '#/definitions/sentinel.CountStat'
+        type: array
+      topReferrers:
+        items:
+          $ref: '#/definitions/sentinel.CountStat'
+        type: array
+      totalViews:
+        type: integer
+      uniqueVisitors:
+        type: integer
+    type: object
+host: localhost:6060
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for a web analytics platform.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Sentinel API
+  version: "1.0"
+paths:
+  /api/dashboard:
+    get:
+      description: Get dashboard stats for a site.
+      parameters:
+      - description: Site ID
+        in: query
+        name: siteId
+        required: true
+        type: string
+      - description: Number of days to get stats for
+        in: query
+        name: days
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sentinel.Stats'
+      summary: Get dashboard stats
+      tags:
+      - analytics
+  /api/sites:
+    get:
+      description: Get a list of all sites for the authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/sentinel.Site'
+            type: array
+      summary: List sites
+      tags:
+      - sites
+    post:
+      consumes:
+      - application/json
+      description: Add a new site to be tracked.
+      parameters:
+      - description: Site to create
+        in: body
+        name: site
+        required: true
+        schema:
+          $ref: '#/definitions/sentinel.Site'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/sentinel.Site'
+      summary: Create a new site
+      tags:
+      - sites
+  /api/sites/{id}:
+    delete:
+      description: Delete a site.
+      parameters:
+      - description: Site ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+      summary: Delete a site
+      tags:
+      - sites
+    put:
+      consumes:
+      - application/json
+      description: Update an existing site.
+      parameters:
+      - description: Site ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Site to update
+        in: body
+        name: site
+        required: true
+        schema:
+          $ref: '#/definitions/sentinel.Site'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/sentinel.Site'
+      summary: Update a site
+      tags:
+      - sites
+  /track:
+    post:
+      consumes:
+      - application/json
+      description: Track a new page view event.
+      parameters:
+      - description: Event to track
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/sentinel.Event'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Track a new event
+      tags:
+      - analytics
+swagger: "2.0"

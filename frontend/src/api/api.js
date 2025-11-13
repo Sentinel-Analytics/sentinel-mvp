@@ -1,57 +1,60 @@
-const API_URL = "https://api-sentinel.getmusterup.com"
+import axios from "axios";
 
-const request = async (endpoint, options = {}) => {
-  const defaultOptions = {
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  }
+const API_URL = "https://api-sentinel.getmusterup.com";
 
+const axiosInstance = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const request = async (config) => {
   try {
-    const response = await fetch(`${API_URL}${endpoint}`, { ...defaultOptions, ...options })
-    const data = await response.json().catch(() => ({}))
-
-    if (!response.ok) {
-      throw new Error(data.error || `HTTP error! status: ${response.status}`)
-    }
-    return data
+    const response = await axiosInstance(config);
+    return response.data;
   } catch (error) {
-    console.error(`API request to ${endpoint} failed:`, error)
-    throw error
+    console.error(`API request to ${config.url} failed:`, error);
+    throw error.response ? error.response.data : error;
   }
-}
+};
 
 export const api = {
   login: (email, password) => {
-    const formData = new URLSearchParams()
-    formData.append("email", email)
-    formData.append("password", password)
-    return request("/auth/login", {
+    const formData = new URLSearchParams();
+    formData.append("email", email);
+    formData.append("password", password);
+    return request({
+      url: "/auth/login",
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData,
-    })
+      data: formData,
+    });
   },
 
   signup: (email, password) => {
-    const formData = new URLSearchParams()
-    formData.append("email", email)
-    formData.append("password", password)
-    return request("/auth/signup", {
+    const formData = new URLSearchParams();
+    formData.append("email", email);
+    formData.append("password", password);
+    return request({
+      url: "/auth/signup",
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData,
-    })
+      data: formData,
+    });
   },
 
-  logout: () => request("/logout"),
-  getSites: () => request("/api/sites/"),
+  logout: () => request({ url: "/logout" }),
+  getSites: () => request({ url: "/api/sites/" }),
   addSite: (name) =>
-    request("/api/sites/", {
+    request({
+      url: "/api/sites/",
       method: "POST",
-      body: JSON.stringify({ name }),
+      data: { name },
     }),
-  getDashboardStats: (siteId, days) => request(`/api/dashboard?siteId=${siteId}&days=${days}`),
-}
+  getDashboardStats: (siteId, days) =>
+    request({
+      url: `/api/dashboard?siteId=${siteId}&days=${days}`,
+    }),
+};

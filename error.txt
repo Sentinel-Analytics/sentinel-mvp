@@ -1,0 +1,4 @@
+Access to fetch at 'https://api-sentinel.getmusterup.com//auth/signup' from origin 'https://sentinel-mvp.getmusterup.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+
+could not import sentinel.go/docs (no required module provides package "sentinel.go/docs")compilerBrokenImport
+Follow link (ctrl + click)

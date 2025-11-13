@@ -1,0 +1,302 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server for a web analytics platform.",
+        "title": "Sentinel API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:6060",
+    "basePath": "/",
+    "paths": {
+        "/api/dashboard": {
+            "get": {
+                "description": "Get dashboard stats for a site.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Get dashboard stats",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Site ID",
+                        "name": "siteId",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of days to get stats for",
+                        "name": "days",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Stats"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sites": {
+            "get": {
+                "description": "Get a list of all sites for the authenticated user.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sites"
+                ],
+                "summary": "List sites",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/sentinel.Site"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new site to be tracked.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sites"
+                ],
+                "summary": "Create a new site",
+                "parameters": [
+                    {
+                        "description": "Site to create",
+                        "name": "site",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Site"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Site"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sites/{id}": {
+            "put": {
+                "description": "Update an existing site.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sites"
+                ],
+                "summary": "Update a site",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Site ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Site to update",
+                        "name": "site",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Site"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Site"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a site.",
+                "tags": [
+                    "sites"
+                ],
+                "summary": "Delete a site",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Site ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                }
+            }
+        },
+        "/track": {
+            "post": {
+                "description": "Track a new page view event.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Track a new event",
+                "parameters": [
+                    {
+                        "description": "Event to track",
+                        "name": "event",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/sentinel.Event"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "sentinel.CountStat": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "sentinel.Event": {
+            "type": "object",
+            "properties": {
+                "referrer": {
+                    "type": "string"
+                },
+                "screenWidth": {
+                    "type": "integer"
+                },
+                "siteId": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "sentinel.Site": {
+            "type": "object",
+            "properties": {
+                "domain": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "sentinel.Stats": {
+            "type": "object",
+            "properties": {
+                "avgVisitDuration": {
+                    "type": "string"
+                },
+                "bounceRate": {
+                    "type": "integer"
+                },
+                "topBrowsers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sentinel.CountStat"
+                    }
+                },
+                "topCountries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sentinel.CountStat"
+                    }
+                },
+                "topOS": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sentinel.CountStat"
+                    }
+                },
+                "topPages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sentinel.CountStat"
+                    }
+                },
+                "topReferrers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/sentinel.CountStat"
+                    }
+                },
+                "totalViews": {
+                    "type": "integer"
+                },
+                "uniqueVisitors": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

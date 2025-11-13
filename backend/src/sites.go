@@ -45,7 +45,12 @@ func SitesApiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// handleListSites handles GET /api/sites
+// @Summary List sites
+// @Description Get a list of all sites for the authenticated user.
+// @Tags sites
+// @Produce  json
+// @Success 200 {array} Site
+// @Router /api/sites [get]
 func handleListSites(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
 
@@ -69,7 +74,14 @@ func handleListSites(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(sites)
 }
 
-// handleCreateSite handles POST /api/sites
+// @Summary Create a new site
+// @Description Add a new site to be tracked.
+// @Tags sites
+// @Accept  json
+// @Produce  json
+// @Param site body Site true "Site to create"
+// @Success 201 {object} Site
+// @Router /api/sites [post]
 func handleCreateSite(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
 	var site Site
@@ -91,7 +103,15 @@ func handleCreateSite(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(site)
 }
 
-// handleUpdateSite handles PUT /api/sites/{id}
+// @Summary Update a site
+// @Description Update an existing site.
+// @Tags sites
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Site ID"
+// @Param site body Site true "Site to update"
+// @Success 200 {object} Site
+// @Router /api/sites/{id} [put]
 func handleUpdateSite(w http.ResponseWriter, r *http.Request, siteID string) {
 	userID := r.Context().Value("userID").(int)
 	var site Site
@@ -118,7 +138,12 @@ func handleUpdateSite(w http.ResponseWriter, r *http.Request, siteID string) {
 	json.NewEncoder(w).Encode(site)
 }
 
-// handleDeleteSite handles DELETE /api/sites/{id}
+// @Summary Delete a site
+// @Description Delete a site.
+// @Tags sites
+// @Param id path string true "Site ID"
+// @Success 204 "No Content"
+// @Router /api/sites/{id} [delete]
 func handleDeleteSite(w http.ResponseWriter, r *http.Request, siteID string) {
 	userID := r.Context().Value("userID").(int)
 

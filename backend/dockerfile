@@ -1,17 +1,44 @@
-# This file should be at: /sentinel-go-mvp/backend/Dockerfile
-FROM golang:1.24-alpine
+# Use the official Golang image to create a build artifact.
+# This is a multi-stage build, so we'll use a temporary image for building.
+FROM golang:1.19-alpine AS builder
 
+# Set the Current Working Directory inside the container
 WORKDIR /app
 
-# Copy the module files, which are now in the root of the backend context
+# We want to populate the module cache based on the go.mod file.
 COPY go.mod go.sum ./
-
-# Download the Go dependencies
 RUN go mod download
 
-# Copy the rest of your backend source code
-# This includes the 'src' directory, GeoIP database, and main.go
+# Copy the source code into the container
 COPY . .
 
-# The default command now runs the main.go file from the root
-CMD ["go", "run", "main.go"]
+# Install swag CLI
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
+# Generate swagger docs
+RUN /go/bin/swag init
+
+# Build the Go app
+# -ldflags="-s -w" is used to make the binary smaller
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o sentinel-backend .
+
+# Use a minimal image to run the application.
+FROM alpine:latest
+
+# Add ca-certificates to make SSL calls
+RUN apk --no-cache add ca-certificates
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy the pre-built binary file from the previous stage
+COPY --from=builder /app/sentinel-backend .
+COPY --from=builder /app/docs ./docs
+COPY GeoLite2-Country.mmdb .
+COPY static ./static
+
+# This port will be exposed to the outside world
+EXPOSE 6060
+
+# Command to run the executable
+CMD ["./sentinel-backend"]
