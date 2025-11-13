@@ -14,27 +14,38 @@ var chConn driver.Conn
 
 func InitClickHouse() {
 	var err error
-	chConn, err = clickhouse.Open(&clickhouse.Options{
-		Addr: []string{"clickhouse:9000"},
-		Auth: clickhouse.Auth{
-			Database: "sentinel",
-		},
-		Debug: true,
-		Settings: clickhouse.Settings{
-			"max_execution_time": 60,
-		},
-	})
+	var conn driver.Conn
 
-	if err != nil {
-		log.Fatalf("Error connecting to ClickHouse: %v", err)
+	for i := 0; i < 5; i++ {
+		conn, err = clickhouse.Open(&clickhouse.Options{
+			Addr: []string{"clickhouse:9000"},
+			Auth: clickhouse.Auth{
+				Database: "sentinel",
+			},
+			Settings: clickhouse.Settings{
+				"max_execution_time": 60,
+			},
+		})
+
+		if err != nil {
+			log.Printf("Error connecting to ClickHouse: %v. Retrying in 3 seconds...", err)
+			time.Sleep(3 * time.Second)
+			continue
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		if err = conn.Ping(ctx); err != nil {
+			log.Printf("Error pinging ClickHouse: %v. Retrying in 3 seconds...", err)
+			time.Sleep(3 * time.Second)
+			continue
+		}
+
+		chConn = conn
+		fmt.Println("Successfully connected to ClickHouse!")
+		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	if err := chConn.Ping(ctx); err != nil {
-		log.Fatalf("Error pinging ClickHouse: %v", err)
-	}
-
-	fmt.Println("Successfully connected to ClickHouse!")
+	log.Fatalf("Could not connect to ClickHouse after several retries: %v", err)
 }
