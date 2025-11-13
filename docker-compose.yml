@@ -4,7 +4,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "7070:7070"
+      - "6060:6060"
     volumes:
       - ./backend:/app
     environment:
