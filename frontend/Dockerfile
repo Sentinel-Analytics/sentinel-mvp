@@ -1,23 +1,14 @@
-# Use Node.js 22 on Debian (safer for Rollup prebuilt binaries)
-FROM node:22-slim
-
-# Enable Yarn via corepack
-RUN corepack enable
-
-# Set working directory
+# Stage 1: Build the React application
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copy package.json first
-COPY package.json ./
-
-# Install dependencies (this will generate yarn.lock inside container)
-RUN yarn install
-
-# Copy the rest of your app
+COPY package*.json ./
+RUN npm install
 COPY . .
+RUN npm run build
 
-# Expose Vite default port
-EXPOSE 5173
-
-# Run dev server
-CMD ["yarn", "dev", "--host"]
+# Stage 2: Serve the application with Nginx
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
