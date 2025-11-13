@@ -31,6 +31,7 @@ func main() {
 	// All functions from your library are now prefixed with 'sentinel.'
 	sentinel.InitDB()
 	sentinel.InitAnalyticsEngine()
+	sentinel.InitClickHouse()
 
 	mux := http.NewServeMux()
 
