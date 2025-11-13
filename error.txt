@@ -1,8 +1,3 @@
-{"error": "Email and password cannot be empty"}
-{email: "dabruverse@gmail.com", password: "1syconex.Inc"}
-email
-: 
-"dabruverse@gmail.com"
-password
-: 
-"1syconex.Inc"
+<script src="http://127.0.0.1:8000/static/tracker-v3.js" data-site-id="76fb4957-5ad8-4fb7-92f5-31017332097b"></script>
+
+fix this the script should be this  remeber  not localhost

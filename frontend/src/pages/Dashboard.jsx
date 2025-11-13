@@ -96,7 +96,7 @@ const Dashboard = () => {
   const copyTrackingScript = async () => {
     if (!selectedSite) return
 
-    const trackingScript = `<script src="http://127.0.0.1:8000/static/tracker-v3.js" data-site-id="${selectedSite.id}"></script>`
+    const trackingScript = `<script src="https://api-sentinel.getmusterup.com/static/tracker-v3.js" data-site-id="${selectedSite.id}"></script>`
 
     try {
       await navigator.clipboard.writeText(trackingScript)
@@ -207,7 +207,7 @@ const Dashboard = () => {
                 </p>
                 <div className="relative">
                   <pre className="bg-slate-900 border border-slate-600 rounded-lg p-4 text-sm text-slate-300 overflow-x-auto">
-                    <code>{`<script src="http://127.0.0.1:8000/static/tracker-v3.js" data-site-id="${selectedSite.id}"></script>`}</code>
+                    <code>{`<script src="https://api-sentinel.getmusterup.com/static/tracker-v3.js" data-site-id="${selectedSite.id}"></script>`}</code>
                   </pre>
                   <button
                     onClick={copyTrackingScript}
