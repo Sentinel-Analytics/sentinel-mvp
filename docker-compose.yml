@@ -5,9 +5,7 @@ services:
       context: ./backend
       dockerfile: dockerfile
     ports:
-      - "7070:7070"
-    volumes:
-      - ./backend:/app
+      - "6060:6060"
     environment:
       - DATABASE_URL=postgres://sentinel:password@db:6432/sentinel?sslmode=disable
     depends_on:

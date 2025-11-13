@@ -1,19 +1,15 @@
-ner sentinel-sentinelmvp-qmzqqi-frontend-1  Recreate
-Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreate
+iner sentinel-sentinelmvp-qmzqqi-backend-1  Recreate
 Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreated
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreated
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Starting
 Container sentinel-sentinelmvp-qmzqqi-backend-1  Starting
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Started
 Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./sentinel-backend": stat ./sentinel-backend: no such file or directory: unknown
-Error ❌  sentinel-sentinelmvp-qmzqqi-frontend  Built
-sentinel-sentinelmvp-qmzqqi-backend  Built
+Error ❌  sentinel-sentinelmvp-qmzqqi-backend  Built
+sentinel-sentinelmvp-qmzqqi-frontend  Built
 Container sentinel-sentinelmvp-qmzqqi-db-1  Running
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreate
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Running
 Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreate
 Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreated
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreated
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Starting
-Container sentinel-sentinelmvp-qmzqqi-backend-1  Startin
-Container sentinel-sentinelmvp-qmzqqi-frontend-1  Started
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Starting
 Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./sentinel-backend": stat ./sentinel-backend: no such file or directory: unknown
+
+
+That error message 🔥 tells you exactly what’s wrong — your backend container fails to start because Docker can’t find the executable it’s told to run inside the image.
