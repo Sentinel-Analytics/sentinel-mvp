@@ -1,4 +1,4 @@
-module sentinel.go
+module sentinel-backend
 
 go 1.24.5
 

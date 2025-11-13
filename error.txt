@@ -1,4 +1,19 @@
-Access to fetch at 'https://api-sentinel.getmusterup.com//auth/signup' from origin 'https://sentinel-mvp.getmusterup.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
-
-could not import sentinel.go/docs (no required module provides package "sentinel.go/docs")compilerBrokenImport
-Follow link (ctrl + click)
+ner sentinel-sentinelmvp-qmzqqi-frontend-1  Recreate
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreate
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreated
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreated
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Starting
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Starting
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Started
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./sentinel-backend": stat ./sentinel-backend: no such file or directory: unknown
+Error ❌  sentinel-sentinelmvp-qmzqqi-frontend  Built
+sentinel-sentinelmvp-qmzqqi-backend  Built
+Container sentinel-sentinelmvp-qmzqqi-db-1  Running
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreate
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreate
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Recreated
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Recreated
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Starting
+Container sentinel-sentinelmvp-qmzqqi-backend-1  Startin
+Container sentinel-sentinelmvp-qmzqqi-frontend-1  Started
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: exec: "./sentinel-backend": stat ./sentinel-backend: no such file or directory: unknown
