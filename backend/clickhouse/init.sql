@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS sentinel.events (
     ClientIP String,
     URL String,
     Referrer String,
-    ScreenWidth UInt116,
+    ScreenWidth UInt16,
     Browser String,
     OS String,
     Country String
