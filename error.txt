@@ -1,1 +1,8 @@
-API request to /auth/signup failed: ht {message: 'Request failed with status code 400', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}email=mail%40mail.com&password=Amaniel%404
+{"error": "Email and password cannot be empty"}
+{email: "dabruverse@gmail.com", password: "1syconex.Inc"}
+email
+: 
+"dabruverse@gmail.com"
+password
+: 
+"1syconex.Inc"

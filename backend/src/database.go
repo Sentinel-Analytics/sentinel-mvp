@@ -117,9 +117,18 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	r.ParseForm()
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+
+	var creds struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+		return
+	}
+
+	email := creds.Email
+	password := creds.Password
 
 	if email == "" || password == "" {
 		http.Error(w, `{"error": "Email and password cannot be empty"}`, http.StatusBadRequest)
@@ -165,9 +174,19 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	r.ParseForm()
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+
+	var creds struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		http.Error(w, `{"error": "Invalid request body"}`, http.StatusBadRequest)
+		return
+	}
+
+	email := creds.Email
+	password := creds.Password
+
 	var storedHash string
 	var userID int
 	err := db.QueryRow("SELECT id, password_hash FROM users WHERE email = $1", email).Scan(&userID, &storedHash)
