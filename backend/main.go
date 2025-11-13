@@ -58,10 +58,12 @@ func main() {
 // CORSMiddleware adds CORS headers to all responses
 func CORSMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Allow all origins for development. Replace "*" with frontend URL in production.
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		// Only allow requests from your frontend domain
+		frontendOrigin := "https://sentinel-mvp.getmusterup.com"
+		w.Header().Set("Access-Control-Allow-Origin", frontendOrigin)
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true") // Important for cookies / credentials
 
 		// Handle preflight requests
 		if r.Method == http.MethodOptions {
@@ -72,3 +74,4 @@ func CORSMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
