@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - DATABASE_URL=postgres://sentinel:password@db:5432/sentinel?sslmode=disable
+      - DATABASE_URL=postgres://sentinel:password@db:6432/sentinel?sslmode=disable
     depends_on:
       - db
     # This corrected command first changes into the 'src' directory, then runs the app.
@@ -17,8 +17,7 @@ services:
   frontend:
     build:
       context: ./frontend
-    ports:
-      - "5173:5173"
+    container_name: frontend
     volumes:
       - ./frontend:/app
       # This prevents the local node_modules from overwriting the container's
@@ -36,8 +35,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "6432:5432"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
 
 volumes:
   postgres_data:
-
