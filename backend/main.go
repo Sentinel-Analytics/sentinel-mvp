@@ -7,6 +7,7 @@ import (
 	_ "sentinel-backend/docs"
 	sentinel "sentinel-backend/src"
 
+	"github.com/rs/cors"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -25,14 +26,15 @@ import (
 // @host localhost:6060
 // @BasePath /
 func main() {
-	// Initialize DB and engines
+	// All functions from your library are now prefixed with 'sentinel.'
 	sentinel.InitDB()
 	sentinel.InitAnalyticsEngine()
 	sentinel.InitClickHouse()
 
 	mux := http.NewServeMux()
 
-	// Serve static files
+	// The file server now needs to look inside the 'static' folder
+	// which will be created in the Docker container.
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
@@ -49,29 +51,18 @@ func main() {
 	// Swagger documentation
 	mux.HandleFunc("/docs/", httpSwagger.WrapHandler)
 
+	// CORS Middleware
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"https://sentinel-mvp.getmusterup.com", "https://sentinel.getmusterup.com"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type"},
+		AllowCredentials: true,
+	})
+	handler := c.Handler(mux)
+
 	log.Println("Sentinel Go server starting on :6060")
-	if err := http.ListenAndServe(":6060", CORSMiddleware(mux)); err != nil {
+	if err := http.ListenAndServe(":6060", handler); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
-}
-
-// CORSMiddleware adds CORS headers to all responses
-func CORSMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Only allow requests from your frontend domain
-		frontendOrigin := "https://sentinel-mvp.getmusterup.com"
-		w.Header().Set("Access-Control-Allow-Origin", frontendOrigin)
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		w.Header().Set("Access-Control-Allow-Credentials", "true") // Important for cookies / credentials
-
-		// Handle preflight requests
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
 }
 

@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -120,6 +120,12 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	email := r.FormValue("email")
 	password := r.FormValue("password")
+
+	if email == "" || password == "" {
+		http.Error(w, `{"error": "Email and password cannot be empty"}`, http.StatusBadRequest)
+		return
+	}
+
 	hashedPassword, err := hashPassword(password)
 	if err != nil {
 		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
@@ -128,10 +134,27 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	var userID int
 	err = db.QueryRow("INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id", email, hashedPassword).Scan(&userID)
 	if err != nil {
-		log.Printf("Error creating user: %v", err)
-		http.Error(w, `{"error": "Could not create user (email might be taken)"}`, http.StatusBadRequest)
+		if pqErr, ok := err.(*pq.Error); ok && pqErr.Code == "23505" {
+			http.Error(w, `{"error": "Could not create user (email might be taken)"}`, http.StatusBadRequest)
+		} else {
+			log.Printf("Error creating user: %v", err)
+			http.Error(w, `{"error": "An unexpected error occurred"}`, http.StatusInternalServerError)
+		}
 		return
 	}
+
+	// Set session cookie upon successful signup
+	http.SetCookie(w, &http.Cookie{
+		Name:     "sentinel_session",
+		Value:    strconv.Itoa(userID),
+		Path:     "/",
+		Expires:  time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+		Secure:   true, // Important for cross-domain
+		SameSite: http.SameSiteNoneMode,
+		Domain:   ".getmusterup.com", // Set to the parent domain
+	})
+
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "User created successfully"})
 }
@@ -157,27 +180,33 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
-		Name:    "sentinel_session",
-		Value:   strconv.Itoa(userID),
-		Path:    "/",
-		Expires: time.Now().Add(24 * time.Hour),
-        HttpOnly: true, // More secure
-        SameSite: http.SameSiteLaxMode,
+		Name:     "sentinel_session",
+		Value:    strconv.Itoa(userID),
+		Path:     "/",
+		Expires:  time.Now().Add(24 * time.Hour),
+		HttpOnly: true,
+		Secure:   true, // Important for cross-domain
+		SameSite: http.SameSiteNoneMode,
+		Domain:   ".getmusterup.com", // Set to the parent domain
 	})
-	
+
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Login successful"})
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-    http.SetCookie(w, &http.Cookie{
-        Name:    "sentinel_session",
-        Value:   "",
-        Path:    "/",
-        Expires: time.Unix(0, 0),
-    })
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(map[string]string{"message": "Logged out"})
+	http.SetCookie(w, &http.Cookie{
+		Name:     "sentinel_session",
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+		Domain:   ".getmusterup.com",
+	})
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Logged out"})
 }
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
