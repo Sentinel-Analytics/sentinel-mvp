@@ -50,6 +50,7 @@ services:
       - "9000:9000"
     volumes:
       - ./backend/clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - clickhouse_data:/var/lib/clickhouse
     ulimits:
       nproc: 65535
       nofile:
@@ -65,3 +66,4 @@ networks:
 
 volumes:
   postgres_data:
+  clickhouse_data:
