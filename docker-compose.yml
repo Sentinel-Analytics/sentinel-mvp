@@ -7,7 +7,7 @@ services:
     ports:
       - "6060:6060"
     environment:
-      - DATABASE_URL=postgres://sentinel:password@db:6432/sentinel?sslmode=disable
+      - DATABASE_URL=postgres://sentinel:password@db:5432/sentinel?sslmode=disable
     depends_on:
       - db
     # This corrected command first changes into the 'src' directory, then runs the app.
