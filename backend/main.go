@@ -52,13 +52,7 @@ func main() {
 	mux.HandleFunc("/docs/", httpSwagger.WrapHandler)
 
 	// CORS Middleware
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://sentinel-mvp.getmusterup.com", "https://sentinel.getmusterup.com"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Content-Type"},
-		AllowCredentials: true,
-	})
-	handler := c.Handler(mux)
+	handler := cors.Default().Handler(mux)
 
 	log.Println("Sentinel Go server starting on :6060")
 	if err := http.ListenAndServe(":6060", handler); err != nil {

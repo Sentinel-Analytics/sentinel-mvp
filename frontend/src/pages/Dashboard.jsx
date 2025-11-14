@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Eye, Users, TrendingDown, Clock, Plus, LogOut, Copy, Check } from "lucide-react"
+import { Eye, Users, TrendingDown, Clock, Plus, LogOut, Copy, Check, Trash2 } from "lucide-react"
 import { api } from "../api"
 import Logo from "../components/Logo"
 import StatCard from "../components/StatCard"
@@ -144,15 +144,22 @@ const Dashboard = () => {
             <div className="space-y-2">
               {sites.length > 0 ? (
                 sites.map((site) => (
-                  <button
-                    key={site.id}
-                    onClick={() => setSelectedSite(site)}
-                    className={`w-full text-left p-3 rounded-lg transition-colors ${
-                      selectedSite?.id === site.id ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-700"
-                    }`}
-                  >
-                    {site.name}
-                  </button>
+                  <div key={site.id} className="flex items-center justify-between">
+                    <button
+                      onClick={() => setSelectedSite(site)}
+                      className={`w-full text-left p-3 rounded-lg transition-colors ${
+                        selectedSite?.id === site.id ? "bg-indigo-600 text-white" : "text-slate-300 hover:bg-slate-700"
+                      }`}
+                    >
+                      {site.name}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSite(site.id)}
+                      className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 ))
               ) : (
                 <div className="text-slate-400 text-sm p-3">No sites added yet. Add your first site below.</div>

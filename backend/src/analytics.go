@@ -50,8 +50,8 @@ func InitAnalyticsEngine() {
 }
 
 type Stats struct {
-	TotalViews     int         `json:"totalViews"`
-	UniqueVisitors int         `json:"uniqueVisitors"`
+	TotalViews     uint64      `json:"totalViews"`
+	UniqueVisitors uint64      `json:"uniqueVisitors"`
 	TopPages       []CountStat `json:"topPages"`
 	TopReferrers   []CountStat `json:"topReferrers"`
 	TopBrowsers    []CountStat `json:"topBrowsers"`
@@ -61,7 +61,7 @@ type Stats struct {
 
 type CountStat struct {
 	Value string `json:"value"`
-	Count int    `json:"count"`
+	Count uint64 `json:"count"`
 }
 
 func TrackHandler(w http.ResponseWriter, r *http.Request) {
