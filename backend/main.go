@@ -38,30 +38,37 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
+	// --- CORS Policies ---
+	// Permissive CORS for the tracking endpoint
+	trackCors := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST", "OPTIONS"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+
+	// Strict CORS for the dashboard and API
+	apiCors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"https://sentinel-mvp.getmusterup.com", "https://sentinel.getmusterup.com", "http://localhost:5173"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+
 	// --- Public API Routes ---
-	mux.HandleFunc("/auth/signup", sentinel.SignupHandler)
-	mux.HandleFunc("/auth/login", sentinel.LoginHandler)
-	mux.HandleFunc("/track", sentinel.TrackHandler)
+	mux.Handle("/auth/signup", apiCors.Handler(http.HandlerFunc(sentinel.SignupHandler)))
+	mux.Handle("/auth/login", apiCors.Handler(http.HandlerFunc(sentinel.LoginHandler)))
+	mux.Handle("/track", trackCors.Handler(http.HandlerFunc(sentinel.TrackHandler)))
 
 	// --- Protected API Routes ---
-	mux.HandleFunc("/logout", sentinel.AuthMiddleware(sentinel.LogoutHandler))
-	mux.HandleFunc("/api/sites/", sentinel.AuthMiddleware(sentinel.SitesApiHandler))
-	mux.HandleFunc("/api/dashboard", sentinel.AuthMiddleware(sentinel.DashboardApiHandler))
+	mux.Handle("/logout", apiCors.Handler(sentinel.AuthMiddleware(sentinel.LogoutHandler)))
+	mux.Handle("/api/sites/", apiCors.Handler(sentinel.AuthMiddleware(sentinel.SitesApiHandler)))
+	mux.Handle("/api/dashboard", apiCors.Handler(sentinel.AuthMiddleware(sentinel.DashboardApiHandler)))
 
 	// Swagger documentation
 	mux.HandleFunc("/docs/", httpSwagger.WrapHandler)
 
-	// CORS Middleware
-	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Content-Type"},
-		
-	})
-	handler := c.Handler(mux)
-
 	log.Println("Sentinel Go server starting on :6060")
-	if err := http.ListenAndServe(":6060", handler); err != nil {
+	if err := http.ListenAndServe(":6060", mux); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
 }
