@@ -255,34 +255,34 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {dashboardData && dashboardData.stats ? (
+              {dashboardData ? (
                 <>
                   {/* Stats Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <StatCard
                       title="Total Views"
-                      value={dashboardData.stats.totalViews?.toLocaleString() || "0"}
+                      value={dashboardData.totalViews?.toLocaleString() || "0"}
                       icon={Eye}
                       change={12.5}
                       changeType="positive"
                     />
                     <StatCard
                       title="Unique Visitors"
-                      value={dashboardData.stats.uniqueVisitors?.toLocaleString() || "0"}
+                      value={dashboardData.uniqueVisitors?.toLocaleString() || "0"}
                       icon={Users}
                       change={8.2}
                       changeType="positive"
                     />
                     <StatCard
                       title="Bounce Rate"
-                      value={`${dashboardData.stats.bounceRate?.toFixed(1) || 0}%`}
+                      value={`${dashboardData.bounceRate?.toFixed(1) || 0}%`}
                       icon={TrendingDown}
                       change={-2.1}
                       changeType="positive"
                     />
                     <StatCard
                       title="Avg. Visit Time"
-                      value={dashboardData.stats.avgVisitTime || "0s"}
+                      value={dashboardData.avgVisitTime || "0s"}
                       icon={Clock}
                       change={15.3}
                       changeType="positive"
@@ -293,26 +293,26 @@ const Dashboard = () => {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <LineChart
                       title="Daily Visitors"
-                      data={dashboardData.dailyVisitors?.data || []}
-                      labels={dashboardData.dailyVisitors?.labels || []}
+                      data={[]}
+                      labels={[]}
                     />
                     <BarChart
                       title="Top Pages"
-                      data={dashboardData.topPages?.data || []}
-                      labels={dashboardData.topPages?.labels || []}
+                      data={dashboardData.topPages?.map(p => p.count) || []}
+                      labels={dashboardData.topPages?.map(p => p.value) || []}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <DoughnutChart
                       title="Visitors by Country"
-                      data={dashboardData.visitorsByCountry?.data || []}
-                      labels={dashboardData.visitorsByCountry?.labels || []}
+                      data={dashboardData.topCountries?.map(c => c.count) || []}
+                      labels={dashboardData.topCountries?.map(c => c.value) || []}
                     />
                     <DoughnutChart
                       title="Visitors by OS"
-                      data={dashboardData.visitorsByOS?.data || []}
-                      labels={dashboardData.visitorsByOS?.labels || []}
+                      data={dashboardData.topOS?.map(os => os.count) || []}
+                      labels={dashboardData.topOS?.map(os => os.value) || []}
                     />
                   </div>
                 </>
