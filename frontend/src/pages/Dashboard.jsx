@@ -128,8 +128,18 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
+    let intervalId
     if (selectedSite) {
       fetchDashboardData(selectedSite.id)
+      intervalId = setInterval(() => {
+        fetchDashboardData(selectedSite.id)
+      }, 30000) // Poll every 30 seconds
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId)
+      }
     }
   }, [selectedSite])
 
