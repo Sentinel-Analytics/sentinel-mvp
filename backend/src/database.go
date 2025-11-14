@@ -69,6 +69,28 @@ func createTables() {
 	if _, err := db.Exec(createSitesTable); err != nil {
 		log.Fatalf("Could not create sites table: %v", err)
 	}
+	createFirewallRulesTable := `
+    CREATE TABLE IF NOT EXISTS firewall_rules (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        site_id UUID NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
+        rule_type TEXT NOT NULL, -- e.g., "ip", "country", "asn"
+        value TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );`
+	if _, err := db.Exec(createFirewallRulesTable); err != nil {
+		log.Fatalf("Could not create firewall_rules table: %v", err)
+	}
+	createFunnelsTable := `
+    CREATE TABLE IF NOT EXISTS funnels (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        site_id UUID NOT NULL REFERENCES sites(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        steps JSONB NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );`
+	if _, err := db.Exec(createFunnelsTable); err != nil {
+		log.Fatalf("Could not create funnels table: %v", err)
+	}
 	log.Println("Database tables are set up.")
 }
 

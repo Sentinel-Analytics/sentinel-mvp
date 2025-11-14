@@ -58,11 +58,16 @@ func main() {
 	mux.Handle("/auth/signup", apiCors.Handler(http.HandlerFunc(sentinel.SignupHandler)))
 	mux.Handle("/auth/login", apiCors.Handler(http.HandlerFunc(sentinel.LoginHandler)))
 	mux.Handle("/track", trackCors.Handler(http.HandlerFunc(sentinel.TrackHandler)))
+	mux.Handle("/api/session", trackCors.Handler(http.HandlerFunc(sentinel.SessionHandler)))
 
 	// --- Protected API Routes ---
 	mux.Handle("/logout", apiCors.Handler(sentinel.AuthMiddleware(sentinel.LogoutHandler)))
 	mux.Handle("/api/sites/", apiCors.Handler(sentinel.AuthMiddleware(sentinel.SitesApiHandler)))
 	mux.Handle("/api/dashboard", apiCors.Handler(sentinel.AuthMiddleware(sentinel.DashboardApiHandler)))
+	mux.Handle("/api/firewall", apiCors.Handler(sentinel.AuthMiddleware(sentinel.FirewallApiHandler)))
+	mux.Handle("/api/session/events", apiCors.Handler(sentinel.AuthMiddleware(sentinel.GetSessionEventsHandler)))
+	mux.Handle("/api/sessions", apiCors.Handler(sentinel.AuthMiddleware(sentinel.ListSessionsHandler)))
+	mux.Handle("/api/funnels/", apiCors.Handler(sentinel.AuthMiddleware(sentinel.FunnelsApiHandler)))
 
 	// Swagger documentation
 	mux.HandleFunc("/docs/", httpSwagger.WrapHandler)

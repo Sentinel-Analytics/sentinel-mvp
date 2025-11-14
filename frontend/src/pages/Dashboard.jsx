@@ -218,6 +218,26 @@ const Dashboard = () => {
             </form>
           </div>
 
+          {/* Session Replay Link */}
+          <div className="mb-8">
+            <a
+              href="/session-replay"
+              className="w-full flex items-center justify-center space-x-2 p-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors"
+            >
+              <span>Session Replay</span>
+            </a>
+          </div>
+
+          {/* Funnels Link */}
+          <div className="mb-8">
+            <a
+              href="/funnels"
+              className="w-full flex items-center justify-center space-x-2 p-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors"
+            >
+              <span>Funnels</span>
+            </a>
+          </div>
+
           {/* Logout Button */}
           <button
             onClick={handleLogout}
@@ -244,7 +264,7 @@ const Dashboard = () => {
                 </p>
                 <div className="relative">
                   <pre className="bg-slate-900 border border-slate-600 rounded-lg p-4 text-sm text-slate-300 overflow-x-auto">
-                    <code>{`<script src="https://api-sentinel.getmusterup.com/static/tracker-v3.js" data-site-id="${selectedSite.id}"></script>`}</code>
+                    <code>{`<script src="https://api-sentinel.getmusterup.com/static/tracker-v4.js" data-site-id="${selectedSite.id}"></script>`}</code>
                   </pre>
                   <button
                     onClick={copyTrackingScript}
@@ -295,6 +315,38 @@ const Dashboard = () => {
                       value={dashboardData.avgVisitTime || "0s"}
                       icon={Clock}
                       change={15.3}
+                      changeType="positive"
+                    />
+                    <StatCard
+                      title="Traffic Quality Score"
+                      value={`${dashboardData.trafficQualityScore?.toFixed(1) || 0}%`}
+                      icon={Eye} // Placeholder icon, consider adding a more relevant one like ShieldCheck
+                      change={0} // No change calculation for now
+                      changeType="positive"
+                    />
+                  </div>
+
+                  {/* Web Vitals Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <StatCard
+                      title="Avg. LCP"
+                      value={`${dashboardData.avgLcp?.toFixed(2) || 0}ms`}
+                      icon={Clock}
+                      change={0}
+                      changeType="positive"
+                    />
+                    <StatCard
+                      title="Avg. CLS"
+                      value={`${dashboardData.avgCls?.toFixed(2) || 0}`}
+                      icon={TrendingDown}
+                      change={0}
+                      changeType="positive"
+                    />
+                    <StatCard
+                      title="Avg. FID"
+                      value={`${dashboardData.avgFid?.toFixed(2) || 0}ms`}
+                      icon={Users}
+                      change={0}
                       changeType="positive"
                     />
                   </div>

@@ -1,13 +1,1 @@
-index-BDjILb8-.js:135 Uncaught ReferenceError: Icon is not defined
-    at Vo (index-BDjILb8-.js:135:6756)
-    at zu (index-BDjILb8-.js:48:34137)
-    at Wu (index-BDjILb8-.js:48:62250)
-    at Bg (index-BDjILb8-.js:48:72752)
-    at um (index-BDjILb8-.js:48:106785)
-    at bx (index-BDjILb8-.js:48:105850)
-    at xc (index-BDjILb8-.js:48:105682)
-    at am (index-BDjILb8-.js:48:102792)
-    at Sm (index-BDjILb8-.js:48:114226)
-    at MessagePort.at (index-BDjILb8-.js:25:1600)
-
-﻿
+so the generate tracking script is it updated to teh v4 or we dont need to upgrade it to use v4"

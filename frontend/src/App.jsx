@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Dashboard from "./pages/Dashboard"
 import Login from "./pages/Login"
 import Signup from "./pages/SignUp"
+import SessionReplay from "./pages/SessionReplay"
+import FunnelsPage from "./pages/FunnelsPage"
 
 const ProtectedRoute = ({ children }) => {
   // The Dashboard component now handles its own authentication check
@@ -22,6 +24,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/session-replay" element={<SessionReplay />} />
+        <Route path="/funnels" element={<FunnelsPage />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>

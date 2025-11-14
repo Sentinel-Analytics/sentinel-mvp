@@ -55,4 +55,33 @@ export const api = {
     request({
       url: `/api/dashboard?siteId=${siteId}&days=${days}`,
     }),
+  getSessionEvents: (siteId, sessionId) =>
+    request({
+      url: `/api/session/events?siteId=${siteId}&sessionId=${sessionId}`,
+    }),
+  listSessions: (siteId) =>
+    request({
+      url: `/api/sessions?siteId=${siteId}`,
+    }),
+  listFunnels: (siteId) =>
+    request({
+      url: `/api/funnels/?siteId=${siteId}`,
+    }),
+  createFunnel: (funnel) =>
+    request({
+      url: "/api/funnels/",
+      method: "POST",
+      data: funnel,
+    }),
+  updateFunnel: (funnel) =>
+    request({
+      url: "/api/funnels/",
+      method: "PUT",
+      data: funnel,
+    }),
+  deleteFunnel: (id) =>
+    request({
+      url: `/api/funnels/?id=${id}`,
+      method: "DELETE",
+    }),
 };

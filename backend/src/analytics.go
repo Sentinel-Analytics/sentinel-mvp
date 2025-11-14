@@ -2,6 +2,7 @@ package sentinel
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net"
@@ -17,10 +18,13 @@ import (
 // --- EVENT TRACKING ---
 
 type Event struct {
-	SiteID      string `json:"siteId"`
-	URL         string `json:"url"`
-	Referrer    string `json:"referrer"`
-	ScreenWidth int    `json:"screenWidth"`
+	SiteID      string   `json:"siteId"`
+	URL         string   `json:"url"`
+	Referrer    string   `json:"referrer"`
+	ScreenWidth int      `json:"screenWidth"`
+	LCP         *float64 `json:"LCP,omitempty"`
+	CLS         *float64 `json:"CLS,omitempty"`
+	FID         *float64 `json:"FID,omitempty"`
 }
 
 type EventData struct {
@@ -33,12 +37,17 @@ type EventData struct {
 	Browser     string
 	OS          string
 	Country     string
+	TrustScore  uint8
+	LCP         sql.NullFloat64
+	CLS         sql.NullFloat64
+	FID         sql.NullFloat64
 }
 
 // --- ANALYTICS ENGINE ---
 
 var uaParser *uaparser.Parser
 var geoipDb *geoip2.Reader
+var asnDb *geoip2.Reader
 
 func InitAnalyticsEngine() {
 	var err error
@@ -48,18 +57,27 @@ func InitAnalyticsEngine() {
 	if err != nil {
 		log.Printf("Warning: GeoIP database 'GeoLite2-Country.mmdb' not found. Country lookups will be disabled. Error: %v", err)
 	}
+
+	asnDb, err = geoip2.Open("GeoLite2-ASN.mmdb")
+	if err != nil {
+		log.Printf("Warning: ASN database 'GeoLite2-ASN.mmdb' not found. Bot detection will be less accurate. Error: %v", err)
+	}
 }
 
 type Stats struct {
-	TotalViews     uint64      `json:"totalViews"`
-	UniqueVisitors uint64      `json:"uniqueVisitors"`
-	BounceRate     float64     `json:"bounceRate"`
-	AvgVisitTime   string      `json:"avgVisitTime"`
-	TopPages       []CountStat `json:"topPages"`
-	TopReferrers   []CountStat `json:"topReferrers"`
-	TopBrowsers    []CountStat `json:"topBrowsers"`
-	TopOS          []CountStat `json:"topOS"`
-	TopCountries   []CountStat `json:"topCountries"`
+	TotalViews          uint64      `json:"totalViews"`
+	UniqueVisitors      uint64      `json:"uniqueVisitors"`
+	BounceRate          float64     `json:"bounceRate"`
+	AvgVisitTime        string      `json:"avgVisitTime"`
+	TrafficQualityScore float64     `json:"trafficQualityScore"`
+	AvgLCP              float64     `json:"avgLcp"`
+	AvgCLS              float64     `json:"avgCls"`
+	AvgFID              float64     `json:"avgFid"`
+	TopPages            []CountStat `json:"topPages"`
+	TopReferrers        []CountStat `json:"topReferrers"`
+	TopBrowsers         []CountStat `json:"topBrowsers"`
+	TopOS               []CountStat `json:"topOS"`
+	TopCountries        []CountStat `json:"topCountries"`
 }
 
 type CountStat struct {
@@ -82,6 +100,36 @@ func getClientIP(r *http.Request) string {
 		return r.RemoteAddr // or handle error appropriately
 	}
 	return ip
+}
+
+// List of known bot user agent substrings
+var botUserAgents = []string{
+	"bot", "spider", "crawler", "monitor", "Go-http-client", "python-requests",
+}
+
+func calculateTrustScore(ip net.IP, userAgent string) uint8 {
+	score := 100 // Start with a perfect score
+
+	// Penalty for known bot user agents
+	for _, botString := range botUserAgents {
+		if strings.Contains(strings.ToLower(userAgent), botString) {
+			score -= 50
+			break // Apply penalty once
+		}
+	}
+
+	// Penalty for being from a data center (ASN lookup)
+	if asnDb != nil && ip != nil {
+		_, err := asnDb.ASN(ip)
+		if err == nil {
+			score -= 40
+		}
+	}
+
+	if score < 0 {
+		return 0
+	}
+	return uint8(score)
 }
 
 func TrackHandler(w http.ResponseWriter, r *http.Request) {
@@ -118,21 +166,34 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 		osFamily = "Unknown"
 	}
 
+	trustScore := calculateTrustScore(ip, userAgent)
+
+	// --- Firewall Blocking Logic ---
+	// Check if the request should be blocked by firewall rules
+	if isBlocked(event.SiteID, ipStr, country, client.Os.Family) {
+		http.Error(w, "Forbidden by firewall", http.StatusForbidden)
+		return
+	}
+
 	eventData := EventData{
 		Timestamp:   time.Now().UTC(),
 		SiteID:      event.SiteID,
-		ClientIP:    ipStr, // Use the resolved IP string
+		ClientIP:    ipStr,
 		URL:         event.URL,
 		Referrer:    event.Referrer,
 		ScreenWidth: uint16(event.ScreenWidth),
 		Browser:     browser,
 		OS:          osFamily,
 		Country:     country,
+		TrustScore:  trustScore,
+		LCP:         nullFloat64(event.LCP),
+		CLS:         nullFloat64(event.CLS),
+		FID:         nullFloat64(event.FID),
 	}
 
 	// Insert into ClickHouse
 	ctx := context.Background()
-	err := chConn.AsyncInsert(ctx, "INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", false,
+	err := chConn.AsyncInsert(ctx, "INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", false,
 		eventData.Timestamp,
 		eventData.SiteID,
 		eventData.ClientIP,
@@ -142,6 +203,10 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 		eventData.Browser,
 		eventData.OS,
 		eventData.Country,
+		eventData.TrustScore,
+		eventData.LCP,
+		eventData.CLS,
+		eventData.FID,
 	)
 	if err != nil {
 		log.Printf("Error inserting event into ClickHouse: %v", err)
@@ -152,6 +217,46 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+}
+
+func isBlocked(siteID, ip, country, asn string) bool {
+	rows, err := db.Query("SELECT rule_type, value FROM firewall_rules WHERE site_id = $1", siteID)
+	if err != nil {
+		log.Printf("Error querying firewall rules: %v", err)
+		return false
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var ruleType, value string
+		if err := rows.Scan(&ruleType, &value); err != nil {
+			log.Printf("Error scanning firewall rule: %v", err)
+			continue
+		}
+
+		switch ruleType {
+		case "ip":
+			// Handle CIDR ranges as well
+			if strings.Contains(value, "/") {
+				_, ipNet, err := net.ParseCIDR(value)
+				if err == nil && ipNet.Contains(net.ParseIP(ip)) {
+					return true
+				}
+			} else if value == ip {
+				return true
+			}
+		case "country":
+			if value == country {
+				return true
+			}
+		case "asn":
+			// This is a simplified check. A more robust solution would involve ASN lookup for the incoming IP.
+			if value == asn {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func DashboardApiHandler(w http.ResponseWriter, r *http.Request) {
@@ -273,6 +378,38 @@ func calculateStats(siteID string, days int) (Stats, error) {
 		return stats, err
 	}
 
+	// Traffic Quality Score
+	queryGoodTraffic := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY AND TrustScore > 50"
+	var goodTrafficCount uint64
+	err = chConn.QueryRow(ctx, queryGoodTraffic, siteID, days).Scan(&goodTrafficCount)
+	if err != nil {
+		log.Printf("Error querying good traffic count: %v", err)
+		stats.TrafficQualityScore = 0
+	} else if stats.TotalViews > 0 {
+		stats.TrafficQualityScore = (float64(goodTrafficCount) / float64(stats.TotalViews)) * 100
+	} else {
+		stats.TrafficQualityScore = 0
+	}
+
+	// Average Web Vitals
+	queryAvgLCP := "SELECT avg(LCP) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
+	err = chConn.QueryRow(ctx, queryAvgLCP, siteID, days).Scan(&stats.AvgLCP)
+	if err != nil {
+		stats.AvgLCP = 0
+	}
+
+	queryAvgCLS := "SELECT avg(CLS) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
+	err = chConn.QueryRow(ctx, queryAvgCLS, siteID, days).Scan(&stats.AvgCLS)
+	if err != nil {
+		stats.AvgCLS = 0
+	}
+
+	queryAvgFID := "SELECT avg(FID) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
+	err = chConn.QueryRow(ctx, queryAvgFID, siteID, days).Scan(&stats.AvgFID)
+	if err != nil {
+		stats.AvgFID = 0
+	}
+
 	return stats, nil
 }
 
@@ -295,5 +432,13 @@ func queryTopStats(ctx context.Context, column, siteID string, days int) ([]Coun
 	}
 
 	return result, nil
+}
+
+// Helper function to convert *float64 to sql.NullFloat64
+func nullFloat64(f *float64) sql.NullFloat64 {
+	if f == nil {
+		return sql.NullFloat64{}
+	}
+	return sql.NullFloat64{Float64: *f, Valid: true}
 }
 

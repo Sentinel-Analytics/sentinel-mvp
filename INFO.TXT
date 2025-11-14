@@ -1,34 +1,3 @@
-{
-    "totalViews": 1,
-    "uniqueVisitors": 1,
-    "topPages": [
-        {
-            "value": "https://anivault.getmusterup.com/",
-            "count": 1
-        }
-    ],
-    "topReferrers": [
-        {
-            "value": "",
-            "count": 1
-        }
-    ],
-    "topBrowsers": [
-        {
-            "value": "Chrome",
-            "count": 1
-        }
-    ],
-    "topOS": [
-        {
-            "value": "Windows",
-            "count": 1
-        }
-    ],
-    "topCountries": [
-        {
-            "value": "Unknown",
-            "count": 1
-        }
-    ]
-}
+Session replays would be nice. 
+
+I'd also want to know in general what parts of the site the users engage with most and any other thing that might give me insights into issues users are running into
