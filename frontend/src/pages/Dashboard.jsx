@@ -80,6 +80,26 @@ const Dashboard = () => {
     }
   }
 
+  const handleDeleteSite = async (siteId) => {
+    if (!window.confirm("Are you sure you want to delete this site? This action cannot be undone.")) {
+      return
+    }
+
+    try {
+      await api.deleteSite(siteId)
+      // Refetch sites after deletion
+      const updatedSites = await api.getSites()
+      setSites(updatedSites || [])
+
+      // If the deleted site was the selected one, clear the selection
+      if (selectedSite && selectedSite.id === siteId) {
+        setSelectedSite(updatedSites && updatedSites.length > 0 ? updatedSites[0] : null)
+      }
+    } catch (error) {
+      console.error("Failed to delete site:", error)
+    }
+  }
+
   const handleLogout = async () => {
     try {
       await api.logout()

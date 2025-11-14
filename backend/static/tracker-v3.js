@@ -6,7 +6,7 @@
         return;
     }
     const siteId = scriptTag.getAttribute('data-site-id');
-    const aPIEndpoint = 'http://127.0.0.1:8000/track' // Relative URL is fine
+    const aPIEndpoint = 'https://anivault-api.getmusterup.com/track' // Relative URL is fine
 
     function track() {
         const data = {

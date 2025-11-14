@@ -45,6 +45,12 @@ export const api = {
       method: "POST",
       data: { name },
     }),
+  deleteSite: (id) =>
+    request({
+      url: "/api/sites/",
+      method: "DELETE",
+      data: { id },
+    }),
   getDashboardStats: (siteId, days) =>
     request({
       url: `/api/dashboard?siteId=${siteId}&days=${days}`,
