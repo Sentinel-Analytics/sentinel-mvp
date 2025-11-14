@@ -52,6 +52,8 @@ func InitAnalyticsEngine() {
 type Stats struct {
 	TotalViews     uint64      `json:"totalViews"`
 	UniqueVisitors uint64      `json:"uniqueVisitors"`
+	BounceRate     float64     `json:"bounceRate"`
+	AvgVisitTime   string      `json:"avgVisitTime"`
 	TopPages       []CountStat `json:"topPages"`
 	TopReferrers   []CountStat `json:"topReferrers"`
 	TopBrowsers    []CountStat `json:"topBrowsers"`
@@ -62,6 +64,23 @@ type Stats struct {
 type CountStat struct {
 	Value string `json:"value"`
 	Count uint64 `json:"count"`
+}
+
+func getClientIP(r *http.Request) string {
+	// Check for X-Forwarded-For header first
+	forwardedFor := r.Header.Get("X-Forwarded-For")
+	if forwardedFor != "" {
+		// The header can contain a comma-separated list of IPs. The first one is the original client.
+		ips := strings.Split(forwardedFor, ",")
+		return strings.TrimSpace(ips[0])
+	}
+
+	// Fallback to RemoteAddr
+	ip, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return r.RemoteAddr // or handle error appropriately
+	}
+	return ip
 }
 
 func TrackHandler(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +97,7 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	userAgent := r.UserAgent()
 	client := uaParser.Parse(userAgent)
 
-	ipStr, _, _ := net.SplitHostPort(r.RemoteAddr)
+	ipStr := getClientIP(r)
 	ip := net.ParseIP(ipStr)
 
 	country := "Unknown"
@@ -101,7 +120,7 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	eventData := EventData{
 		Timestamp:   time.Now().UTC(),
 		SiteID:      event.SiteID,
-		ClientIP:    r.RemoteAddr,
+		ClientIP:    ipStr, // Use the resolved IP string
 		URL:         event.URL,
 		Referrer:    event.Referrer,
 		ScreenWidth: uint16(event.ScreenWidth),
@@ -176,6 +195,53 @@ func calculateStats(siteID string, days int) (Stats, error) {
 		return stats, err
 	}
 
+	// Bounce Rate
+	// This query first calculates the number of pageviews for each visitor (session).
+	// Then it counts how many of those visitors had only one pageview (bounces).
+	// Finally, it divides the number of bounces by the total number of visitors.
+	queryBounceRate := `
+		SELECT
+			(countIf(pageviews = 1) / count()) * 100
+		FROM (
+			SELECT
+				ClientIP,
+				count() AS pageviews
+			FROM events
+			WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY
+			GROUP BY ClientIP
+		)
+	`
+	err = chConn.QueryRow(ctx, queryBounceRate, siteID, days).Scan(&stats.BounceRate)
+	if err != nil {
+		// It's possible there's no data, which can cause an error. Default to 0.
+		stats.BounceRate = 0
+	}
+
+	// Average Visit Duration
+	// This query calculates the duration of each session (time between max and min timestamp for each visitor).
+	// Then it calculates the average of these durations.
+	queryAvgVisitTime := `
+		SELECT
+			avg(duration)
+		FROM (
+			SELECT
+				ClientIP,
+				date_diff('second', min(Timestamp), max(Timestamp)) AS duration
+			FROM events
+			WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY
+			GROUP BY ClientIP
+		)
+	`
+	var avgSeconds float64
+	err = chConn.QueryRow(ctx, queryAvgVisitTime, siteID, days).Scan(&avgSeconds)
+	if err != nil {
+		stats.AvgVisitTime = "0s"
+	} else {
+		// Format the duration into a more readable string (e.g., 1m 23s)
+		d := time.Duration(avgSeconds) * time.Second
+		stats.AvgVisitTime = d.Round(time.Second).String()
+	}
+
 	// Top Pages
 	stats.TopPages, err = queryTopStats(ctx, "URL", siteID, days)
 	if err != nil {
@@ -208,6 +274,7 @@ func calculateStats(siteID string, days int) (Stats, error) {
 
 	return stats, nil
 }
+
 
 func queryTopStats(ctx context.Context, column, siteID string, days int) ([]CountStat, error) {
 	query := "SELECT " + column + ", count() AS c FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY GROUP BY " + column + " ORDER BY c DESC LIMIT 10"

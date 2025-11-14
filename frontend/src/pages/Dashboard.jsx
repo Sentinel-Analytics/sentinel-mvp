@@ -275,7 +275,7 @@ const Dashboard = () => {
                     />
                     <StatCard
                       title="Bounce Rate"
-                      value={`${dashboardData.stats.bounceRate || 0}%`}
+                      value={`${dashboardData.stats.bounceRate?.toFixed(1) || 0}%`}
                       icon={TrendingDown}
                       change={-2.1}
                       changeType="positive"

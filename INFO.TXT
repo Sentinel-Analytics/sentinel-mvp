@@ -1,0 +1,34 @@
+{
+    "totalViews": 1,
+    "uniqueVisitors": 1,
+    "topPages": [
+        {
+            "value": "https://anivault.getmusterup.com/",
+            "count": 1
+        }
+    ],
+    "topReferrers": [
+        {
+            "value": "",
+            "count": 1
+        }
+    ],
+    "topBrowsers": [
+        {
+            "value": "Chrome",
+            "count": 1
+        }
+    ],
+    "topOS": [
+        {
+            "value": "Windows",
+            "count": 1
+        }
+    ],
+    "topCountries": [
+        {
+            "value": "Unknown",
+            "count": 1
+        }
+    ]
+}
