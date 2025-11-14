@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import 'rrweb-player/dist/style.css';
 import { api } from '../api';
 
 const SessionReplay = () => {
@@ -44,6 +43,13 @@ const SessionReplay = () => {
 
     useEffect(() => {
         const loadRrwebPlayer = () => {
+            // Inject CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = 'https://cdn.jsdelivr.net/npm/rrweb-player@latest/dist/style.css';
+            document.head.appendChild(cssLink);
+
+            // Inject Script
             const script = document.createElement('script');
             script.src = 'https://cdn.jsdelivr.net/npm/rrweb-player';
             script.async = true;
@@ -54,6 +60,7 @@ const SessionReplay = () => {
             };
 
             return () => {
+                document.head.removeChild(cssLink);
                 document.body.removeChild(script);
             };
         };

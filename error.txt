@@ -1,1 +1,17 @@
-so the generate tracking script is it updated to teh v4 or we dont need to upgrade it to use v4"
+ Build failed in 941ms
+error during build:
+[vite]: Rollup failed to resolve import "rrweb-player/dist/style.css" from "C:/Users/USER/sentinel-mvp/frontend/src/pages/SessionReplay.jsx".  
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+`build.rollupOptions.external`
+    at viteLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34340:57)
+    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:73
+    at onwarn (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/@vitejs/plugin-react/dist/index.js:89:7)
+    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:28
+    at onRollupLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34373:3)
+    at onLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34169:4)
+    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:20911:32
+    at Object.logger [as onLog] (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:22797:9)
+    at ModuleLoader.handleInvalidResolvedId (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21541:26)
+    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21499:26
+PS C:\Users\USER\sentinel-mvp\frontend> 
