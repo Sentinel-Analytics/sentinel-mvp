@@ -1,3 +1,104 @@
-Session replays would be nice. 
-
-I'd also want to know in general what parts of the site the users engage with most and any other thing that might give me insights into issues users are running into
+{
+    "totalViews": 42,
+    "uniqueVisitors": 8,
+    "bounceRate": 75,
+    "avgVisitTime": "10m51s",
+    "trafficQualityScore": 0,
+    "avgLcp": 0,
+    "avgCls": 0,
+    "avgFid": 0,
+    "topPages": [
+        {
+            "value": "https://anivault.getmusterup.com/",
+            "count": 15
+        },
+        {
+            "value": "https://anivault.getmusterup.com/login",
+            "count": 5
+        },
+        {
+            "value": "https://anivault.getmusterup.com/anime/d73ac2e4-cf2f-b467-ad0e-947e647701e3?animeTitle=Bleach",
+            "count": 5
+        },
+        {
+            "value": "https://anivault.getmusterup.com/anime/482ee04f-39d2-e088-a6b0-69ced82516a3?animeTitle=Blue+Lock",
+            "count": 5
+        },
+        {
+            "value": "https://anivault.getmusterup.com/downloads",
+            "count": 4
+        },
+        {
+            "value": "https://anivault.getmusterup.com/settings",
+            "count": 2
+        },
+        {
+            "value": "https://anivault.getmusterup.com/downloads/0ecdf193-2338-4328-9c86-46d78e9cb1db",
+            "count": 1
+        },
+        {
+            "value": "https://anivault.getmusterup.com/downloads/db148c54-562d-4e52-b32b-3cd9cefc1a15",
+            "count": 1
+        },
+        {
+            "value": "https://anivault.getmusterup.com/anime/9fb7a653-4e98-3d43-56b9-b47a3cb56908?animeTitle=Koikimo",
+            "count": 1
+        },
+        {
+            "value": "https://anivault.getmusterup.com/register",
+            "count": 1
+        }
+    ],
+    "topReferrers": [
+        {
+            "value": "",
+            "count": 36
+        },
+        {
+            "value": "https://anivault.getmusterup.com/login",
+            "count": 5
+        },
+        {
+            "value": "https://www.google.com/",
+            "count": 1
+        }
+    ],
+    "topBrowsers": [
+        {
+            "value": "Chrome",
+            "count": 31
+        },
+        {
+            "value": "Chrome Mobile",
+            "count": 11
+        }
+    ],
+    "topOS": [
+        {
+            "value": "Windows",
+            "count": 29
+        },
+        {
+            "value": "Android",
+            "count": 11
+        },
+        {
+            "value": "Mac OS X",
+            "count": 2
+        }
+    ],
+    "topCountries": [
+        {
+            "value": "NG",
+            "count": 37
+        },
+        {
+            "value": "Unknown",
+            "count": 3
+        },
+        {
+            "value": "US",
+            "count": 2
+        }
+    ]
+}

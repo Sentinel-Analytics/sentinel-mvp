@@ -1,17 +1,33 @@
- Build failed in 941ms
-error during build:
-[vite]: Rollup failed to resolve import "rrweb-player/dist/style.css" from "C:/Users/USER/sentinel-mvp/frontend/src/pages/SessionReplay.jsx".  
-This is most likely unintended because it can break your application at runtime.
-If you do want to externalize this module explicitly add it to
-`build.rollupOptions.external`
-    at viteLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34340:57)
-    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:73
-    at onwarn (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/@vitejs/plugin-react/dist/index.js:89:7)
-    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34378:28
-    at onRollupLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34373:3)
-    at onLog (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:34169:4)
-    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:20911:32
-    at Object.logger [as onLog] (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:22797:9)
-    at ModuleLoader.handleInvalidResolvedId (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21541:26)
-    at file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21499:26
-PS C:\Users\USER\sentinel-mvp\frontend> 
+mp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:17:30 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:18:01 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:18:30 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:19:33 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:20:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:21:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:22:33 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:23:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:24:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:25:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:26:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:27:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:28:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:29:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:30:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 21:31:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:04:03 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:04:11 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:04:35 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:05:06 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:05:34 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:06:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:07:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:08:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+2025/11/14 22:09:32 Error querying good traffic count: code: 47, message: Unknown expression or function identifier `TrustScore` in scope SELECT count() FROM events WHERE (SiteID = '02a74593-ac3d-4d5e-a797-0fba7aa7d379') AND (Timestamp >= (now() - toIntervalDay(30))) AND (TrustScore > 50)
+
+
+
+also TrustScoreis not being calculated and sunce i updated teh script in the website scirpt tag to use the v4 , the dahsboard data for that site has bee the way it was prior to teh chnage even though the websites has been visited multiple times and track request sent 
+
+Access to fetch at 'https://api-sentinel.getmusterup.com/session' from origin 'https://anivault.getmusterup.com' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+Add session route to the same cors gorup as track and how will use implement the block of ip address and all that 

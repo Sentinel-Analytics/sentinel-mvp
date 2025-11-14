@@ -58,6 +58,7 @@ func main() {
 	mux.Handle("/auth/signup", apiCors.Handler(http.HandlerFunc(sentinel.SignupHandler)))
 	mux.Handle("/auth/login", apiCors.Handler(http.HandlerFunc(sentinel.LoginHandler)))
 	mux.Handle("/track", trackCors.Handler(http.HandlerFunc(sentinel.TrackHandler)))
+	mux.Handle("/session", trackCors.Handler(http.HandlerFunc(sentinel.SessionHandler)))
 	mux.Handle("/api/session", trackCors.Handler(http.HandlerFunc(sentinel.SessionHandler)))
 
 	// --- Protected API Routes ---

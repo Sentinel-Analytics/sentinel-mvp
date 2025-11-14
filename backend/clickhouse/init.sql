@@ -17,6 +17,8 @@ CREATE TABLE IF NOT EXISTS events (
 ) ENGINE = MergeTree()
 ORDER BY (SiteID, Timestamp);
 
+ALTER TABLE events ADD COLUMN IF NOT EXISTS TrustScore UInt8;
+
 CREATE TABLE IF NOT EXISTS session_events (
     Timestamp DateTime,
     SiteID String,
