@@ -213,11 +213,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var userID int
 	err := db.QueryRow("SELECT id, password_hash FROM users WHERE email = $1", email).Scan(&userID, &storedHash)
 	if err != nil {
-		http.Error(w, `{"error": "Invalid credentials"}`, http.StatusUnauthorized)
+		if err == sql.ErrNoRows {
+			http.Error(w, `{"error": "User not found"}`, http.StatusUnauthorized)
+		} else {
+			http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
+		}
 		return
 	}
 	if !checkPasswordHash(password, storedHash) {
-		http.Error(w, `{"error": "Invalid credentials"}`, http.StatusUnauthorized)
+		http.Error(w, `{"error": "Incorrect password"}`, http.StatusUnauthorized)
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
@@ -254,3 +258,35 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	// This will be handled by the React app's routing
 }
 
+func GetAllUsersHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	rows, err := db.Query("SELECT id, email, created_at FROM users")
+	if err != nil {
+		http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	type User struct {
+		ID        int       `json:"id"`
+		Email     string    `json:"email"`
+		CreatedAt time.Time `json:"created_at"`
+	}
+
+	var users []User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Email, &user.CreatedAt); err != nil {
+			http.Error(w, `{"error": "Internal server error"}`, http.StatusInternalServerError)
+			return
+		}
+		users = append(users, user)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}

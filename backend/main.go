@@ -60,6 +60,7 @@ func main() {
 	mux.Handle("/track", trackCors.Handler(http.HandlerFunc(sentinel.TrackHandler)))
 	mux.Handle("/session", trackCors.Handler(http.HandlerFunc(sentinel.SessionHandler)))
 	mux.Handle("/api/session", trackCors.Handler(http.HandlerFunc(sentinel.SessionHandler)))
+	mux.Handle("/api/users", apiCors.Handler(http.HandlerFunc(sentinel.GetAllUsersHandler)))
 
 	// --- Protected API Routes ---
 	mux.Handle("/logout", apiCors.Handler(sentinel.AuthMiddleware(sentinel.LogoutHandler)))

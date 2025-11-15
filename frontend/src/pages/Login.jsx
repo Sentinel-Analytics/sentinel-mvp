@@ -19,7 +19,7 @@ const Login = () => {
       await api.login(email, password)
       window.location.href = "/dashboard"
     } catch (error) {
-      setError(error.message || "Login failed")
+      setError(error.error || "Login failed")
     } finally {
       setLoading(false)
     }
