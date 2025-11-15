@@ -84,4 +84,19 @@ export const api = {
       url: `/api/funnels/?id=${id}`,
       method: "DELETE",
     }),
+  getFirewallRules: (siteId) =>
+    request({
+      url: `/api/firewall?siteId=${siteId}`,
+    }),
+  addFirewallRule: (siteId, rule) =>
+    request({
+      url: `/api/firewall?siteId=${siteId}`,
+      method: "POST",
+      data: rule,
+    }),
+  deleteFirewallRule: (siteId, ruleId) =>
+    request({
+      url: `/api/firewall?siteId=${siteId}&ruleId=${ruleId}`,
+      method: "DELETE",
+    }),
 };

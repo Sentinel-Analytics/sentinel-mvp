@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Eye, Users, TrendingDown, Clock, Plus, LogOut, Copy, Check, Trash2 } from "lucide-react"
+import { Eye, Users, TrendingDown, Clock, Plus, LogOut, Copy, Check, Trash2, Shield } from "lucide-react"
 import { api } from "../api"
 import Logo from "../components/Logo"
 import StatCard from "../components/StatCard"
@@ -235,6 +235,17 @@ const Dashboard = () => {
               className="w-full flex items-center justify-center space-x-2 p-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors"
             >
               <span>Funnels</span>
+            </a>
+          </div>
+
+          {/* Firewall Link */}
+          <div className="mb-8">
+            <a
+              href="/firewall"
+              className="w-full flex items-center justify-center space-x-2 p-3 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-colors"
+            >
+              <Shield className="w-4 h-4" />
+              <span>Firewall</span>
             </a>
           </div>
 

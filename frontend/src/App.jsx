@@ -4,6 +4,7 @@ import Login from "./pages/Login"
 import Signup from "./pages/SignUp"
 import SessionReplay from "./pages/SessionReplay"
 import FunnelsPage from "./pages/FunnelsPage"
+import FirewallPage from "./pages/FirewallPage"
 
 const ProtectedRoute = ({ children }) => {
   // The Dashboard component now handles its own authentication check
@@ -26,6 +27,7 @@ function App() {
         />
         <Route path="/session-replay" element={<SessionReplay />} />
         <Route path="/funnels" element={<FunnelsPage />} />
+        <Route path="/firewall" element={<FirewallPage />} />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>

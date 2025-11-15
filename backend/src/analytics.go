@@ -170,7 +170,14 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 
 	// --- Firewall Blocking Logic ---
 	// Check if the request should be blocked by firewall rules
-	if isBlocked(event.SiteID, ipStr, country, client.Os.Family) {
+    var asn string
+    if asnDb != nil && ip != nil {
+        record, err := asnDb.ASN(ip)
+        if err == nil {
+            asn = record.AutonomousSystemOrganization
+        }
+    }
+	if isBlocked(event.SiteID, ipStr, country, asn) {
 		http.Error(w, "Forbidden by firewall", http.StatusForbidden)
 		return
 	}

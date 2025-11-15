@@ -1,6 +1,6 @@
 CREATE DATABASE IF NOT EXISTS sentinel;
 
-CREATE TABLE IF NOT EXISTS events (
+CREATE TABLE IF NOT EXISTS sentinel.events (
     Timestamp DateTime,
     SiteID String,
     ClientIP String,
@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS events (
 ) ENGINE = MergeTree()
 ORDER BY (SiteID, Timestamp);
 
-ALTER TABLE events ADD COLUMN IF NOT EXISTS TrustScore UInt8;
+ALTER TABLE sentinel.events ADD COLUMN IF NOT EXISTS TrustScore UInt8;
 
-CREATE TABLE IF NOT EXISTS session_events (
+CREATE TABLE IF NOT EXISTS sentinel.session_events (
     Timestamp DateTime,
     SiteID String,
     SessionID String,
