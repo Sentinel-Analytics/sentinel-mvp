@@ -1,15 +1,23 @@
-025/11/15 03:01:08 Successfully connected to the database.
-2025/11/15 03:01:09 Database tables are set up.
-2025/11/15 03:01:09 Error pinging ClickHouse: dial tcp 172.25.0.3:9000: connect: connection refused. Retrying in 3 seconds...
-2025/11/15 03:01:12 Error pinging ClickHouse: dial tcp 172.25.0.3:9000: connect: connection refused. Retrying in 3 seconds...
-Successfully connected to ClickHouse!
-2025/11/15 03:01:15 Sentinel Go server starting on :6060
-2025/11/15 03:01:43 Error inserting event into ClickHouse: code: 60, message: Table sentinel.events does not exist. Maybe you meant default.events?
+747 modules transformed.
+✗ Build failed in 7.01s
+error during build:
+src/pages/FirewallPage.jsx (2:9): "getFirewallRules" is not exported by "src/api/index.js", imported by "src/pages/FirewallPage.jsx".
+file: C:/Users/USER/sentinel-mvp/frontend/src/pages/FirewallPage.jsx:2:9
 
+1: import React, { useState, useEffect } from 'react';
+2: import { getFirewallRules, addFirewallRule, deleteFirewallRule } from '../api'; // Assuming api functions exist
+            ^
+3:
+4: const FirewallPage = () => {
 
-root@a0b1395f931b:/# ls
-bin   docker-entrypoint-initdb.d  home   lib64    media  proc  sbin  tmp
-boot  entrypoint.sh               lib    libx32   mnt    root  srv   usr
-dev   etc                         lib32  linuxrc  opt    run   sys   var
-root@a0b1395f931b:/# 
-
+    at getRollupError (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:16920:16)
+    at Module.traceVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17372:29)
+    at ModuleScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15042:39)        
+    at ReturnValueScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5629:38)    
+    at FunctionBodyScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5629:38)   
+    at ReturnValueScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5629:38)    
+    at FunctionBodyScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5629:38)   
+    at BlockScope.findVariable (file:///C:/Users/USER/sentinel-mvp/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5629:38)
+PS C:\Users\USER\sentinel-mvp\fronten

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getFirewallRules, addFirewallRule, deleteFirewallRule } from '../api'; // Assuming api functions exist
+import { api } from '../api'; // Assuming api functions exist
 
 const FirewallPage = () => {
   const [rules, setRules] = useState([]);
@@ -19,7 +19,7 @@ const FirewallPage = () => {
   const fetchRules = async () => {
     try {
       setLoading(true);
-      const fetchedRules = await getFirewallRules(siteId);
+      const fetchedRules = await api.getFirewallRules(siteId);
       setRules(fetchedRules);
       setError(null);
     } catch (err) {
@@ -37,7 +37,7 @@ const FirewallPage = () => {
       return;
     }
     try {
-      await addFirewallRule(siteId, { rule_type: ruleType, value });
+      await api.addFirewallRule(siteId, { rule_type: ruleType, value });
       setValue('');
       fetchRules(); // Refresh the list
     } catch (err) {
@@ -48,7 +48,7 @@ const FirewallPage = () => {
 
   const handleDeleteRule = async (ruleId) => {
     try {
-      await deleteFirewallRule(siteId, ruleId);
+      await api.deleteFirewallRule(siteId, ruleId);
       fetchRules(); // Refresh the list
     } catch (err) {
       setError('Failed to delete rule.');
@@ -113,7 +113,7 @@ const FirewallPage = () => {
                     <td className="p-2">{rule.value}</td>
                     <td className="text-right p-2">
                       <button
-                        onClick={() => handleDeleteRule(rule.id)}
+                        onClick={() => api.deleteFirewallRule(siteId, rule.id)}
                         className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                       >
                         Delete
