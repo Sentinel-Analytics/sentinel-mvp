@@ -34,15 +34,14 @@
     rrwebScript.onload = function() {
         let events = [];
         let lastUrl = location.href;
-        let vitals = {};
 
-        function track(vitalsToSend) {
+        function track(payload = {}) {
             const data = {
                 siteId: siteId,
                 url: window.location.href,
                 referrer: document.referrer || '',
                 screenWidth: window.screen.width,
-                ...vitalsToSend
+                ...payload
             };
 
             fetch(apiEndpoint, {
@@ -57,29 +56,27 @@
 
         // Expose a global function for web-vitals to call
         window.trackWebVitals = (vital) => {
-            vitals = { ...vitals, ...vital };
+            track(vital);
         };
 
 
         // --- SPA Tracking ---
         // Track initial page view
-        setTimeout(() => track(vitals), 100); // Send initial vitals after a short delay
+        track();
 
         const originalPushState = history.pushState;
-        history.push_state = function(...args) {
+        history.pushState = function(...args) {
             originalPushState.apply(this, args);
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
-                vitals = {}; // Reset vitals for new page view
-                setTimeout(() => track(vitals), 100); // Send vitals for new page
+                track(); // Track navigation
             }
         };
 
         window.addEventListener('popstate', () => {
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
-                vitals = {}; // Reset vitals for new page view
-                setTimeout(() => track(vitals), 100); // Send vitals for new page
+                track(); // Track navigation
             }
         });
 

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"log"
+	"math"
 	"net"
 	"net/http"
 	"strconv"
@@ -301,9 +302,9 @@ func calculateChange(current, previous float64) float64 {
 
 func getCoreStats(ctx context.Context, siteID string, startDaysAgo, endDaysAgo int) (CoreStats, error) {
 	var stats CoreStats
-	
-	// Total Views
-	queryTotalViews := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY"
+
+	// Total Views - only count events that are not web-vital reports
+	queryTotalViews := "SELECT count() FROM events WHERE SiteID = ? AND LCP IS NULL AND CLS IS NULL AND FID IS NULL AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY"
 	err := chConn.QueryRow(ctx, queryTotalViews, siteID, startDaysAgo, endDaysAgo).Scan(&stats.TotalViews)
 	if err != nil && err != sql.ErrNoRows {
 		return stats, err
@@ -329,6 +330,9 @@ func getCoreStats(ctx context.Context, siteID string, startDaysAgo, endDaysAgo i
 	if err != nil {
 		stats.BounceRate = 0
 	}
+	if math.IsNaN(stats.BounceRate) {
+		stats.BounceRate = 0
+	}
 
 	// Average Visit Duration
 	queryAvgVisitTime := `
@@ -341,6 +345,9 @@ func getCoreStats(ctx context.Context, siteID string, startDaysAgo, endDaysAgo i
 		)`
 	err = chConn.QueryRow(ctx, queryAvgVisitTime, siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgVisitTime)
 	if err != nil {
+		stats.AvgVisitTime = 0
+	}
+	if math.IsNaN(stats.AvgVisitTime) {
 		stats.AvgVisitTime = 0
 	}
 
@@ -356,8 +363,17 @@ func getCoreStats(ctx context.Context, siteID string, startDaysAgo, endDaysAgo i
 
 	// Web Vitals
 	chConn.QueryRow(ctx, "SELECT avg(LCP) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgLCP)
+	if math.IsNaN(stats.AvgLCP) {
+		stats.AvgLCP = 0
+	}
 	chConn.QueryRow(ctx, "SELECT avg(CLS) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgCLS)
+	if math.IsNaN(stats.AvgCLS) {
+		stats.AvgCLS = 0
+	}
 	chConn.QueryRow(ctx, "SELECT avg(FID) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgFID)
+	if math.IsNaN(stats.AvgFID) {
+		stats.AvgFID = 0
+	}
 
 	return stats, nil
 }
