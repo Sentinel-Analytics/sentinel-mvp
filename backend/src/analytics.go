@@ -278,8 +278,15 @@ func DashboardApiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Log the stats object before sending
+	log.Printf("Dashboard stats for site %s (last %d days): %+v", siteID, days, stats)
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(stats)
+	if err := json.NewEncoder(w).Encode(stats); err != nil {
+		log.Printf("Error encoding dashboard stats to JSON: %v", err)
+		// The response header might have already been written, so we can't send a new HTTP error.
+		// The client will likely see a truncated or empty response.
+	}
 }
 
 func calculateChange(current, previous float64) float64 {

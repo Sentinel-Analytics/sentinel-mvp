@@ -1,52 +1,8 @@
-{
-    "totalViews": 9,
-    "uniqueVisitors": 1,
-    "bounceRate": 0,
-    "avgVisitTime": "3m15s",
-    "trafficQualityScore": 100,
-    "avgLcp": 0,
-    "avgCls": 0,
-    "avgFid": 0,
-    "topPages": [
-        {
-            "value": "https://anivault.getmusterup.com/",
-            "count": 3
-        },
-        {
-            "value": "https://anivault.getmusterup.com/downloads",
-            "count": 2
-        },
-        {
-            "value": "https://anivault.getmusterup.com/anime/8cc2ee7c-f1e4-b67a-9799-2533ce21a51b?animeTitle=Durarara!!",
-            "count": 2
-        },
-        {
-            "value": "https://anivault.getmusterup.com/login",
-            "count": 2
-        }
-    ],
-    "topReferrers": [
-        {
-            "value": "",
-            "count": 9
-        }
-    ],
-    "topBrowsers": [
-        {
-            "value": "Chrome",
-            "count": 9
-        }
-    ],
-    "topOS": [
-        {
-            "value": "Windows",
-            "count": 9
-        }
-    ],
-    "topCountries": [
-        {
-            "value": "NG",
-            "count": 9
-        }
-    ]
-}
+
+sites/
+dashboard?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493&days=30
+dashboard?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493&days=30
+dashboard?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493&days=30
+dashboard?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493&days=30
+dashboard?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493&days=30
+ and the response is blank and empty but 200vresponse code
