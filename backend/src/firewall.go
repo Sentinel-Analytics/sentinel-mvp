@@ -12,8 +12,8 @@ import (
 type FirewallRule struct {
 	ID       string `json:"id"`
 	SiteID   string `json:"siteId"`
-	RuleType string `json:"ruleType"` // e.g., "ip", "country", "asn"
-	Value    string `json:"value"`    // The actual IP, country code, or ASN
+	RuleType string `json:"rule_type"` // e.g., "ip", "country", "asn"
+	Value    string `json:"value"`     // The actual IP, country code, or ASN
 }
 
 // FirewallApiHandler routes requests to appropriate functions based on HTTP method.

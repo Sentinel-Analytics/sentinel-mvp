@@ -1,4 +1,34 @@
-https://api-sentinel.getmusterup.com/api/firewall?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493
+00 (Bad Request)
+(anonymous) @ index-FWVEuoYO.js:132
+xhr @ index-FWVEuoYO.js:132
+Bp @ index-FWVEuoYO.js:134
+_request @ index-FWVEuoYO.js:135
+request @ index-FWVEuoYO.js:134
+(anonymous) @ index-FWVEuoYO.js:130
+fe @ index-FWVEuoYO.js:135
+addFirewallRule @ index-FWVEuoYO.js:135
+x @ index-FWVEuoYO.js:152
+Tm @ index-FWVEuoYO.js:48
+(anonymous) @ index-FWVEuoYO.js:48
+kh @ index-FWVEuoYO.js:48
+Ou @ index-FWVEuoYO.js:48
+Yu @ index-FWVEuoYO.js:49
+o1 @ index-FWVEuoYO.js:49Understand this error
+index-FWVEuoYO.js:135 API request to /api/firewall?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493 failed: ht {message: 'Request failed with status code 400', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
+fe @ index-FWVEuoYO.js:135
+await in fe
+addFirewallRule @ index-FWVEuoYO.js:135
+x @ index-FWVEuoYO.js:152
+Tm @ index-FWVEuoYO.js:48
+(anonymous) @ index-FWVEuoYO.js:48
+kh @ index-FWVEuoYO.js:48
+Ou @ index-FWVEuoYO.js:48
+Yu @ index-FWVEuoYO.js:49
+o1 @ index-FWVEuoYO.js:49Understand this error
+index-FWVEuoYO.js:152 Invalid rule type. Must be 'ip', 'country', or 'asn'
+
+siteId
+87a3e9d5-ad73-4400-9e4b-364eccb0b493
 {rule_type: "country", value: "NG"}
 rule_type
 : 
@@ -6,32 +36,3 @@ rule_type
 value
 : 
 "NG"
-
-index-Hsx4Mznq.js:132  POST https://api-sentinel.getmusterup.com/api/firewall?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493 403 (Forbidden)
-(anonymous) @ index-Hsx4Mznq.js:132
-xhr @ index-Hsx4Mznq.js:132
-Bp @ index-Hsx4Mznq.js:134
-_request @ index-Hsx4Mznq.js:135
-request @ index-Hsx4Mznq.js:134
-(anonymous) @ index-Hsx4Mznq.js:130
-fe @ index-Hsx4Mznq.js:135
-addFirewallRule @ index-Hsx4Mznq.js:135
-x @ index-Hsx4Mznq.js:152
-Tm @ index-Hsx4Mznq.js:48
-(anonymous) @ index-Hsx4Mznq.js:48
-kh @ index-Hsx4Mznq.js:48
-Ou @ index-Hsx4Mznq.js:48
-Yu @ index-Hsx4Mznq.js:49
-o1 @ index-Hsx4Mznq.js:49Understand this error
-index-Hsx4Mznq.js:135 API request to /api/firewall?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493 failed: ht {message: 'Request failed with status code 403', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
-fe @ index-Hsx4Mznq.js:135
-await in fe
-addFirewallRule @ index-Hsx4Mznq.js:135
-x @ index-Hsx4Mznq.js:152
-Tm @ index-Hsx4Mznq.js:48
-(anonymous) @ index-Hsx4Mznq.js:48
-kh @ index-Hsx4Mznq.js:48
-Ou @ index-Hsx4Mznq.js:48
-Yu @ index-Hsx4Mznq.js:49
-o1 @ index-Hsx4Mznq.js:49Understand this error
-index-Hsx4Mznq.js:152 Forbidden
