@@ -67,6 +67,11 @@ const FirewallPage = () => {
   return (
     <div className="p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl font-bold mb-6">Sentinel Firewall</h1>
+      <p className="text-slate-400 mb-8">
+        Configure rules to block unwanted traffic from being recorded in your analytics. 
+        These rules prevent tracking events from specified IPs, countries, or ASNs, 
+        but do not block direct access to your website.
+      </p>
 
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">Add New Rule</h2>
