@@ -83,6 +83,12 @@ func handleListFirewallRules(w http.ResponseWriter, r *http.Request) {
 // @Router /api/firewall [post]
 func handleCreateFirewallRule(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userID").(int)
+	siteID := r.URL.Query().Get("siteId")
+	if siteID == "" {
+		http.Error(w, "siteId query parameter is required", http.StatusBadRequest)
+		return
+	}
+
 	var rule FirewallRule
 	if err := json.NewDecoder(r.Body).Decode(&rule); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
@@ -91,7 +97,7 @@ func handleCreateFirewallRule(w http.ResponseWriter, r *http.Request) {
 
 	// Verify site ownership
 	var ownerID int
-	err := db.QueryRow("SELECT user_id FROM sites WHERE id = $1", rule.SiteID).Scan(&ownerID)
+	err := db.QueryRow("SELECT user_id FROM sites WHERE id = $1", siteID).Scan(&ownerID)
 	if err != nil || ownerID != userID {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 		return
@@ -124,13 +130,14 @@ func handleCreateFirewallRule(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var newRuleID string
-	err = db.QueryRow("INSERT INTO firewall_rules (site_id, rule_type, value) VALUES ($1, $2, $3) RETURNING id", rule.SiteID, rule.RuleType, rule.Value).Scan(&newRuleID)
+	err = db.QueryRow("INSERT INTO firewall_rules (site_id, rule_type, value) VALUES ($1, $2, $3) RETURNING id", siteID, rule.RuleType, rule.Value).Scan(&newRuleID)
 	if err != nil {
 		http.Error(w, "Failed to create firewall rule", http.StatusInternalServerError)
 		return
 	}
 
 	rule.ID = newRuleID
+	rule.SiteID = siteID
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(rule)
