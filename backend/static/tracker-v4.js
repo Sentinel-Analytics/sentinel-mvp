@@ -66,12 +66,11 @@
         setTimeout(() => track(vitals), 100); // Send initial vitals after a short delay
 
         const originalPushState = history.pushState;
-        history.pushState = function(...args) {
+        history.push_state = function(...args) {
             originalPushState.apply(this, args);
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
                 vitals = {}; // Reset vitals for new page view
-                track(); // Track navigation without vitals first
                 setTimeout(() => track(vitals), 100); // Send vitals for new page
             }
         };
@@ -80,7 +79,6 @@
             if (location.href !== lastUrl) {
                 lastUrl = location.href;
                 vitals = {}; // Reset vitals for new page view
-                track(); // Track navigation without vitals first
                 setTimeout(() => track(vitals), 100); // Send vitals for new page
             }
         });

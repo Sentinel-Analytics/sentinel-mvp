@@ -78,6 +78,27 @@ type Stats struct {
 	TopBrowsers         []CountStat `json:"topBrowsers"`
 	TopOS               []CountStat `json:"topOS"`
 	TopCountries        []CountStat `json:"topCountries"`
+
+	// Percentage changes
+	TotalViewsChange          float64 `json:"totalViewsChange"`
+	UniqueVisitorsChange      float64 `json:"uniqueVisitorsChange"`
+	BounceRateChange          float64 `json:"bounceRateChange"`
+	AvgVisitTimeChange        float64 `json:"avgVisitTimeChange"`
+	TrafficQualityScoreChange float64 `json:"trafficQualityScoreChange"`
+	AvgLCPChange              float64 `json:"avgLcpChange"`
+	AvgCLSChange              float64 `json:"avgClsChange"`
+	AvgFIDChange              float64 `json:"avgFidChange"`
+}
+
+type CoreStats struct {
+	TotalViews          uint64
+	UniqueVisitors      uint64
+	BounceRate          float64
+	AvgVisitTime        float64 // in seconds
+	TrafficQualityScore float64
+	AvgLCP              float64
+	AvgCLS              float64
+	AvgFID              float64
 }
 
 type CountStat struct {
@@ -86,46 +107,36 @@ type CountStat struct {
 }
 
 func getClientIP(r *http.Request) string {
-	// Check for X-Forwarded-For header first
 	forwardedFor := r.Header.Get("X-Forwarded-For")
 	if forwardedFor != "" {
-		// The header can contain a comma-separated list of IPs. The first one is the original client.
 		ips := strings.Split(forwardedFor, ",")
 		return strings.TrimSpace(ips[0])
 	}
-
-	// Fallback to RemoteAddr
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
-		return r.RemoteAddr // or handle error appropriately
+		return r.RemoteAddr
 	}
 	return ip
 }
 
-// List of known bot user agent substrings
 var botUserAgents = []string{
 	"bot", "spider", "crawler", "monitor", "Go-http-client", "python-requests",
 }
 
 func calculateTrustScore(ip net.IP, userAgent string) uint8 {
-	score := 100 // Start with a perfect score
-
-	// Penalty for known bot user agents
+	score := 100
 	for _, botString := range botUserAgents {
 		if strings.Contains(strings.ToLower(userAgent), botString) {
 			score -= 50
-			break // Apply penalty once
+			break
 		}
 	}
-
-	// Penalty for being from a data center (ASN lookup)
 	if asnDb != nil && ip != nil {
 		_, err := asnDb.ASN(ip)
 		if err == nil {
 			score -= 40
 		}
 	}
-
 	if score < 0 {
 		return 0
 	}
@@ -145,7 +156,6 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 
 	userAgent := r.UserAgent()
 	client := uaParser.Parse(userAgent)
-
 	ipStr := getClientIP(r)
 	ip := net.ParseIP(ipStr)
 
@@ -167,16 +177,13 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	trustScore := calculateTrustScore(ip, userAgent)
-
-	// --- Firewall Blocking Logic ---
-	// Check if the request should be blocked by firewall rules
-    var asn string
-    if asnDb != nil && ip != nil {
-        record, err := asnDb.ASN(ip)
-        if err == nil {
-            asn = record.AutonomousSystemOrganization
-        }
-    }
+	var asn string
+	if asnDb != nil && ip != nil {
+		record, err := asnDb.ASN(ip)
+		if err == nil {
+			asn = record.AutonomousSystemOrganization
+		}
+	}
 	if isBlocked(event.SiteID, ipStr, country, asn) {
 		http.Error(w, "Forbidden by firewall", http.StatusForbidden)
 		return
@@ -198,22 +205,11 @@ func TrackHandler(w http.ResponseWriter, r *http.Request) {
 		FID:         nullFloat64(event.FID),
 	}
 
-	// Insert into ClickHouse
 	ctx := context.Background()
 	err := chConn.AsyncInsert(ctx, "INSERT INTO sentinel.events VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", false,
-		eventData.Timestamp,
-		eventData.SiteID,
-		eventData.ClientIP,
-		eventData.URL,
-		eventData.Referrer,
-		eventData.ScreenWidth,
-		eventData.Browser,
-		eventData.OS,
-		eventData.Country,
-		eventData.TrustScore,
-		eventData.LCP,
-		eventData.CLS,
-		eventData.FID,
+		eventData.Timestamp, eventData.SiteID, eventData.ClientIP, eventData.URL, eventData.Referrer,
+		eventData.ScreenWidth, eventData.Browser, eventData.OS, eventData.Country, eventData.TrustScore,
+		eventData.LCP, eventData.CLS, eventData.FID,
 	)
 	if err != nil {
 		log.Printf("Error inserting event into ClickHouse: %v", err)
@@ -240,10 +236,8 @@ func isBlocked(siteID, ip, country, asn string) bool {
 			log.Printf("Error scanning firewall rule: %v", err)
 			continue
 		}
-
 		switch ruleType {
 		case "ip":
-			// Handle CIDR ranges as well
 			if strings.Contains(value, "/") {
 				_, ipNet, err := net.ParseCIDR(value)
 				if err == nil && ipNet.Contains(net.ParseIP(ip)) {
@@ -257,7 +251,6 @@ func isBlocked(siteID, ip, country, asn string) bool {
 				return true
 			}
 		case "asn":
-			// This is a simplified check. A more robust solution would involve ASN lookup for the incoming IP.
 			if value == asn {
 				return true
 			}
@@ -272,11 +265,10 @@ func DashboardApiHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "siteId query parameter is required", http.StatusBadRequest)
 		return
 	}
-
 	daysStr := r.URL.Query().Get("days")
 	days, err := strconv.Atoi(daysStr)
 	if err != nil || days <= 0 {
-		days = 1
+		days = 30 // Default to 30 days
 	}
 
 	stats, err := calculateStats(siteID, days)
@@ -290,136 +282,125 @@ func DashboardApiHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(stats)
 }
 
-func calculateStats(siteID string, days int) (Stats, error) {
-	ctx := context.Background()
-	var stats Stats
+func calculateChange(current, previous float64) float64 {
+	if previous == 0 {
+		if current > 0 {
+			return 100.0 // Infinite growth, capped at 100%
+		}
+		return 0.0
+	}
+	return ((current - previous) / previous) * 100
+}
 
+func getCoreStats(ctx context.Context, siteID string, startDaysAgo, endDaysAgo int) (CoreStats, error) {
+	var stats CoreStats
+	
 	// Total Views
-	queryTotalViews := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
-	err := chConn.QueryRow(ctx, queryTotalViews, siteID, days).Scan(&stats.TotalViews)
-	if err != nil {
+	queryTotalViews := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY"
+	err := chConn.QueryRow(ctx, queryTotalViews, siteID, startDaysAgo, endDaysAgo).Scan(&stats.TotalViews)
+	if err != nil && err != sql.ErrNoRows {
 		return stats, err
 	}
 
 	// Unique Visitors
-	queryUniqueVisitors := "SELECT uniq(ClientIP) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
-	err = chConn.QueryRow(ctx, queryUniqueVisitors, siteID, days).Scan(&stats.UniqueVisitors)
-	if err != nil {
+	queryUniqueVisitors := "SELECT uniq(ClientIP) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY"
+	err = chConn.QueryRow(ctx, queryUniqueVisitors, siteID, startDaysAgo, endDaysAgo).Scan(&stats.UniqueVisitors)
+	if err != nil && err != sql.ErrNoRows {
 		return stats, err
 	}
 
 	// Bounce Rate
-	// This query first calculates the number of pageviews for each visitor (session).
-	// Then it counts how many of those visitors had only one pageview (bounces).
-	// Finally, it divides the number of bounces by the total number of visitors.
 	queryBounceRate := `
-		SELECT
-			(countIf(pageviews = 1) / count()) * 100
+		SELECT (countIf(pageviews = 1) / count()) * 100
 		FROM (
-			SELECT
-				ClientIP,
-				count() AS pageviews
+			SELECT ClientIP, count() AS pageviews
 			FROM events
-			WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY
+			WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY
 			GROUP BY ClientIP
-		)
-	`
-	err = chConn.QueryRow(ctx, queryBounceRate, siteID, days).Scan(&stats.BounceRate)
+		)`
+	err = chConn.QueryRow(ctx, queryBounceRate, siteID, startDaysAgo, endDaysAgo).Scan(&stats.BounceRate)
 	if err != nil {
-		// It's possible there's no data, which can cause an error. Default to 0.
 		stats.BounceRate = 0
 	}
 
 	// Average Visit Duration
-	// This query calculates the duration of each session (time between max and min timestamp for each visitor).
-	// Then it calculates the average of these durations.
 	queryAvgVisitTime := `
-		SELECT
-			avg(duration)
+		SELECT avg(duration)
 		FROM (
-			SELECT
-				ClientIP,
-				date_diff('second', min(Timestamp), max(Timestamp)) AS duration
+			SELECT ClientIP, date_diff('second', min(Timestamp), max(Timestamp)) AS duration
 			FROM events
-			WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY
+			WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY
 			GROUP BY ClientIP
-		)
-	`
-	var avgSeconds float64
-	err = chConn.QueryRow(ctx, queryAvgVisitTime, siteID, days).Scan(&avgSeconds)
+		)`
+	err = chConn.QueryRow(ctx, queryAvgVisitTime, siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgVisitTime)
 	if err != nil {
-		stats.AvgVisitTime = "0s"
-	} else {
-		// Format the duration into a more readable string (e.g., 1m 23s)
-		d := time.Duration(avgSeconds) * time.Second
-		stats.AvgVisitTime = d.Round(time.Second).String()
-	}
-
-	// Top Pages
-	stats.TopPages, err = queryTopStats(ctx, "URL", siteID, days)
-	if err != nil {
-		return stats, err
-	}
-
-	// Top Referrers
-	stats.TopReferrers, err = queryTopStats(ctx, "Referrer", siteID, days)
-	if err != nil {
-		return stats, err
-	}
-
-	// Top Browsers
-	stats.TopBrowsers, err = queryTopStats(ctx, "Browser", siteID, days)
-	if err != nil {
-		return stats, err
-	}
-
-	// Top OS
-	stats.TopOS, err = queryTopStats(ctx, "OS", siteID, days)
-	if err != nil {
-		return stats, err
-	}
-
-	// Top Countries
-	stats.TopCountries, err = queryTopStats(ctx, "Country", siteID, days)
-	if err != nil {
-		return stats, err
+		stats.AvgVisitTime = 0
 	}
 
 	// Traffic Quality Score
-	queryGoodTraffic := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY AND TrustScore > 50"
+	queryGoodTraffic := "SELECT count() FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY AND TrustScore > 50"
 	var goodTrafficCount uint64
-	err = chConn.QueryRow(ctx, queryGoodTraffic, siteID, days).Scan(&goodTrafficCount)
-	if err != nil {
-		log.Printf("Error querying good traffic count: %v", err)
+	err = chConn.QueryRow(ctx, queryGoodTraffic, siteID, startDaysAgo, endDaysAgo).Scan(&goodTrafficCount)
+	if err != nil || stats.TotalViews == 0 {
 		stats.TrafficQualityScore = 0
-	} else if stats.TotalViews > 0 {
-		stats.TrafficQualityScore = (float64(goodTrafficCount) / float64(stats.TotalViews)) * 100
 	} else {
-		stats.TrafficQualityScore = 0
+		stats.TrafficQualityScore = (float64(goodTrafficCount) / float64(stats.TotalViews)) * 100
 	}
 
-	// Average Web Vitals
-	queryAvgLCP := "SELECT avg(LCP) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
-	err = chConn.QueryRow(ctx, queryAvgLCP, siteID, days).Scan(&stats.AvgLCP)
-	if err != nil {
-		stats.AvgLCP = 0
-	}
-
-	queryAvgCLS := "SELECT avg(CLS) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
-	err = chConn.QueryRow(ctx, queryAvgCLS, siteID, days).Scan(&stats.AvgCLS)
-	if err != nil {
-		stats.AvgCLS = 0
-	}
-
-	queryAvgFID := "SELECT avg(FID) FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY"
-	err = chConn.QueryRow(ctx, queryAvgFID, siteID, days).Scan(&stats.AvgFID)
-	if err != nil {
-		stats.AvgFID = 0
-	}
+	// Web Vitals
+	chConn.QueryRow(ctx, "SELECT avg(LCP) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgLCP)
+	chConn.QueryRow(ctx, "SELECT avg(CLS) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgCLS)
+	chConn.QueryRow(ctx, "SELECT avg(FID) FROM events WHERE SiteID = ? AND Timestamp BETWEEN now() - INTERVAL ? DAY AND now() - INTERVAL ? DAY", siteID, startDaysAgo, endDaysAgo).Scan(&stats.AvgFID)
 
 	return stats, nil
 }
 
+func calculateStats(siteID string, days int) (Stats, error) {
+	ctx := context.Background()
+	var finalStats Stats
+
+	// Get stats for the current period (e.g., last 30 days)
+	currentStats, err := getCoreStats(ctx, siteID, days, 0)
+	if err != nil {
+		return finalStats, err
+	}
+
+	// Get stats for the previous period (e.g., 31-60 days ago)
+	previousStats, err := getCoreStats(ctx, siteID, days*2, days)
+	if err != nil {
+		return finalStats, err
+	}
+
+	// Populate the final stats struct
+	finalStats.TotalViews = currentStats.TotalViews
+	finalStats.UniqueVisitors = currentStats.UniqueVisitors
+	finalStats.BounceRate = currentStats.BounceRate
+	d := time.Duration(currentStats.AvgVisitTime) * time.Second
+	finalStats.AvgVisitTime = d.Round(time.Second).String()
+	finalStats.TrafficQualityScore = currentStats.TrafficQualityScore
+	finalStats.AvgLCP = currentStats.AvgLCP
+	finalStats.AvgCLS = currentStats.AvgCLS
+	finalStats.AvgFID = currentStats.AvgFID
+
+	// Calculate percentage changes
+	finalStats.TotalViewsChange = calculateChange(float64(currentStats.TotalViews), float64(previousStats.TotalViews))
+	finalStats.UniqueVisitorsChange = calculateChange(float64(currentStats.UniqueVisitors), float64(previousStats.UniqueVisitors))
+	finalStats.BounceRateChange = calculateChange(currentStats.BounceRate, previousStats.BounceRate)
+	finalStats.AvgVisitTimeChange = calculateChange(currentStats.AvgVisitTime, previousStats.AvgVisitTime)
+	finalStats.TrafficQualityScoreChange = calculateChange(currentStats.TrafficQualityScore, previousStats.TrafficQualityScore)
+	finalStats.AvgLCPChange = calculateChange(currentStats.AvgLCP, previousStats.AvgLCP)
+	finalStats.AvgCLSChange = calculateChange(currentStats.AvgCLS, previousStats.AvgCLS)
+	finalStats.AvgFIDChange = calculateChange(currentStats.AvgFID, previousStats.AvgFID)
+
+	// Top stats are still for the current period
+	finalStats.TopPages, _ = queryTopStats(ctx, "URL", siteID, days)
+	finalStats.TopReferrers, _ = queryTopStats(ctx, "Referrer", siteID, days)
+	finalStats.TopBrowsers, _ = queryTopStats(ctx, "Browser", siteID, days)
+	finalStats.TopOS, _ = queryTopStats(ctx, "OS", siteID, days)
+	finalStats.TopCountries, _ = queryTopStats(ctx, "Country", siteID, days)
+
+	return finalStats, nil
+}
 
 func queryTopStats(ctx context.Context, column, siteID string, days int) ([]CountStat, error) {
 	query := "SELECT " + column + ", count() AS c FROM events WHERE SiteID = ? AND Timestamp >= now() - INTERVAL ? DAY GROUP BY " + column + " ORDER BY c DESC LIMIT 10"
@@ -437,11 +418,9 @@ func queryTopStats(ctx context.Context, column, siteID string, days int) ([]Coun
 		}
 		result = append(result, stat)
 	}
-
 	return result, nil
 }
 
-// Helper function to convert *float64 to sql.NullFloat64
 func nullFloat64(f *float64) sql.NullFloat64 {
 	if f == nil {
 		return sql.NullFloat64{}

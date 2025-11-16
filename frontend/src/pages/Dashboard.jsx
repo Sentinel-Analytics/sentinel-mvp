@@ -304,36 +304,31 @@ const Dashboard = () => {
                       title="Total Views"
                       value={dashboardData.totalViews?.toLocaleString() || "0"}
                       icon={Eye}
-                      change={12.5}
-                      changeType="positive"
+                      change={dashboardData.totalViewsChange}
                     />
                     <StatCard
                       title="Unique Visitors"
                       value={dashboardData.uniqueVisitors?.toLocaleString() || "0"}
                       icon={Users}
-                      change={8.2}
-                      changeType="positive"
+                      change={dashboardData.uniqueVisitorsChange}
                     />
                     <StatCard
                       title="Bounce Rate"
                       value={`${dashboardData.bounceRate?.toFixed(1) || 0}%`}
                       icon={TrendingDown}
-                      change={-2.1}
-                      changeType="positive"
+                      change={dashboardData.bounceRateChange}
                     />
                     <StatCard
                       title="Avg. Visit Time"
                       value={dashboardData.avgVisitTime || "0s"}
                       icon={Clock}
-                      change={15.3}
-                      changeType="positive"
+                      change={dashboardData.avgVisitTimeChange}
                     />
                     <StatCard
                       title="Traffic Quality Score"
                       value={`${dashboardData.trafficQualityScore?.toFixed(1) || 0}%`}
                       icon={Eye} // Placeholder icon, consider adding a more relevant one like ShieldCheck
-                      change={0} // No change calculation for now
-                      changeType="positive"
+                      change={dashboardData.trafficQualityScoreChange}
                     />
                   </div>
 
@@ -343,22 +338,19 @@ const Dashboard = () => {
                       title="Avg. LCP"
                       value={`${dashboardData.avgLcp?.toFixed(2) || 0}ms`}
                       icon={Clock}
-                      change={0}
-                      changeType="positive"
+                      change={dashboardData.avgLcpChange}
                     />
                     <StatCard
                       title="Avg. CLS"
                       value={`${dashboardData.avgCls?.toFixed(2) || 0}`}
                       icon={TrendingDown}
-                      change={0}
-                      changeType="positive"
+                      change={dashboardData.avgClsChange}
                     />
                     <StatCard
                       title="Avg. FID"
                       value={`${dashboardData.avgFid?.toFixed(2) || 0}ms`}
                       icon={Users}
-                      change={0}
-                      changeType="positive"
+                      change={dashboardData.avgFidChange}
                     />
                   </div>
 

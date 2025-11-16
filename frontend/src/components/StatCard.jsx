@@ -1,4 +1,7 @@
-const StatCard = ({ title, value, icon: CardIcon, change, changeType = "positive" }) => {
+const StatCard = ({ title, value, icon: CardIcon, change }) => {
+  const changeType = change >= 0 ? "positive" : "negative"
+  const changeValue = change ? change.toFixed(1) : 0
+
   return (
     <div className="bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300">
       <div className="flex items-center justify-between">
@@ -11,10 +14,10 @@ const StatCard = ({ title, value, icon: CardIcon, change, changeType = "positive
             <p className="text-slate-200 text-2xl font-bold">{value}</p>
           </div>
         </div>
-        {change && (
+        {change !== undefined && (
           <div className={`text-sm font-medium ${changeType === "positive" ? "text-green-400" : "text-red-400"}`}>
             {changeType === "positive" ? "+" : ""}
-            {change}%
+            {changeValue}%
           </div>
         )}
       </div>
@@ -23,3 +26,4 @@ const StatCard = ({ title, value, icon: CardIcon, change, changeType = "positive
 }
 
 export default StatCard
+

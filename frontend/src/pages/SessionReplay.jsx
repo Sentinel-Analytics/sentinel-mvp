@@ -93,7 +93,7 @@ const SessionReplay = () => {
             }
         };
         fetchAndPlaySession();
-    }, [selectedSite, selectedSession]);
+    }, [selectedSite, selectedSession, window.rrwebPlayer]);
 
     return (
         <div className="container mx-auto p-4">

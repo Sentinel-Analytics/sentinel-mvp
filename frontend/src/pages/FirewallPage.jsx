@@ -113,7 +113,7 @@ const FirewallPage = () => {
                     <td className="p-2">{rule.value}</td>
                     <td className="text-right p-2">
                       <button
-                        onClick={() => api.deleteFirewallRule(siteId, rule.id)}
+                        onClick={() => handleDeleteRule(rule.id)}
                         className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
                       >
                         Delete

@@ -1,32 +1,52 @@
-USER@colab-1-vm ~ $ docker ps
-CONTAINER ID   IMAGE                                             COMMAND                  CREATED          STATUS                  PORTS                                                                                                                                                        NAMES
-337cfb61c2aa   sentinel-sentinelmvp-qmzqqi-backend               "./sentinel-backend"     10 minutes ago   Up 10 minutes           0.0.0.0:6060->6060/tcp, :::6060->6060/tcp                                                                                                                    sentinel-sentinelmvp-qmzqqi-backend-1
-04ec0f156e3f   anivault-anivault-kzi3ti-frontend                 "/docker-entrypoint.…"   14 minutes ago   Up 14 minutes           80/tcp, 0.0.0.0:8090->8090/tcp, :::8090->8090/tcp                                                                                                            anivault-anivault-kzi3ti-frontend-1
-f24b1ae24972   anivault-anivault-kzi3ti-backend                  "/entrypoint.sh"         18 hours ago     Up 18 hours             0.0.0.0:8070->8070/tcp, :::8070->8070/tcp                                                                                                                    anivault-anivault-kzi3ti-backend-1
-fe0e598d8285   sentinel-sentinelmvp-qmzqqi-frontend              "/docker-entrypoint.…"   18 hours ago     Up 18 hours             0.0.0.0:8012->80/tcp, :::8012->80/tcp                                                                                                                        sentinel-sentinelmvp-qmzqqi-frontend-1
-c887757a75bc   coder-a5d02c38-7298-4956-817d-59a46c0f8d84        "sh -c '#!/usr/bin/e…"   20 hours ago     Up 20 hours                                                                                                                                                                          coder-unlimiteddemi-first
-96eedc5294c2   ghcr.io/coder/coder:v2.15.3                       "/opt/coder server"      20 hours ago     Up 20 hours             0.0.0.0:7080->7080/tcp, :::7080->7080/tcp                                                                                                                    power-stack-coder-iqmfdk-coder-1
-09705a79157d   my-final-year-project-backend-rosvfe-backend      "uvicorn app.main:ap…"   38 hours ago     Up 38 hours             0.0.0.0:9050->9050/tcp, :::9050->9050/tcp                                                                                                                    my-final-year-project-backend-rosvfe-backend-1
-243c4c30913e   my-final-year-project-backend-rosvfe-frontend     "/docker-entrypoint.…"   43 hours ago     Up 43 hours             0.0.0.0:9090->80/tcp, :::9090->80/tcp                                                                                                                        my-final-year-project-backend-rosvfe-frontend-1
-26e054285039   eceproject-project-r3anqe-backend                 "docker-php-entrypoi…"   43 hours ago     Up 43 hours             0.0.0.0:8000->8000/tcp, :::8000->8000/tcp, 9000/tcp                                                                                                          eceproject-project-r3anqe-backend-1
-f2cdb23e3485   eceproject-project-r3anqe-registration_frontend   "docker-entrypoint.s…"   43 hours ago     Up 43 hours             0.0.0.0:8081->8081/tcp, :::8081->8081/tcp                                                                                                                    eceproject-project-r3anqe-registration_frontend-1
-507e4ccf7762   eceproject-project-r3anqe-frontend                "docker-entrypoint.s…"   43 hours ago     Up 43 hours             0.0.0.0:8001->8001/tcp, :::8001->8001/tcp                                                                                                                    eceproject-project-r3anqe-frontend-1
-89b68a75121d   clickhouse/clickhouse-server                      "/entrypoint.sh"         44 hours ago     Up 44 hours             0.0.0.0:8123->8123/tcp, :::8123->8123/tcp, 0.0.0.0:9000->9000/tcp, :::9000->9000/tcp, 9009/tcp                                                               sentinel-sentinelmvp-qmzqqi-clickhouse-1
-2ebadc46d5df   anivault-compression-service-mp2smt-compressor    "./compressor"           45 hours ago     Up 45 hours             0.0.0.0:6001->6001/tcp, :::6001->6001/tcp                                                                                                                    go-compressor
-8ab5c48bccf3   redis:7                                           "docker-entrypoint.s…"   45 hours ago     Up 45 hours             0.0.0.0:6379->6379/tcp, :::6379->6379/tcp                                                                                                                    redis
-b1fb5ca0bde9   postgres:15-alpine                                "docker-entrypoint.s…"   45 hours ago     Up 44 hours             0.0.0.0:6432->5432/tcp, :::6432->5432/tcp                                                                                                                    sentinel-sentinelmvp-qmzqqi-db-1
-be409a2dab32   postgres:15-alpine                                "docker-entrypoint.s…"   46 hours ago     Up 46 hours (healthy)   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp                                                                                                                    anivault_postgres
-a924ddd4358c   redis:7-alpine                                    "docker-entrypoint.s…"   46 hours ago     Up 46 hours             0.0.0.0:6378->6378/tcp, :::6378->6378/tcp, 6379/tcp                                                                                                          anivault_redis
-5587b4731e3a   eceproject-email-jrsnkx:latest                    "/bin/bash -l -c 'np…"   47 hours ago     Up 47 hours                                                                                                                                                                          eceproject-email-jrsnkx.1.t9mx6rswgwrqafcgaieedgkus
-d8cdea7a9fd0   rabbitmq:3.12-management                          "docker-entrypoint.s…"   2 days ago       Up 2 days               4369/tcp, 5671/tcp, 0.0.0.0:5672->5672/tcp, :::5672->5672/tcp, 15671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp, :::15672->15672/tcp          pipeline-queue
-427f3ffd21d0   redis:7.2-alpine                                  "docker-entrypoint.s…"   2 days ago       Up 2 days               6379/tcp                                                                                                                                                     pipeline-redis
-8c973248a000   dokploy/dokploy:latest                            "docker-entrypoint.s…"   2 days ago       Up 2 days               0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                                                                                                    dokploy.1.14udcibni87ymbxxndxrpclou
-a3279b81ab87   df92bd9ccca8                                      "uvicorn app:app --h…"   2 days ago       Up 2 days               6003/tcp                                                                                                                                                     sentinel-demo-13shw9.1.3onnkxciqx1h3ct6u7zz5va48
-e5b969372e30   mysql:8.0                                         "docker-entrypoint.s…"   2 days ago       Up 2 days               0.0.0.0:3306->3306/tcp, :::3306->3306/tcp, 33060/tcp                                                                                                         eceproject-project-r3anqe-db-1
-21e95b97b047   darthsim/imgproxy:v3                              "entrypoint.sh imgpr…"   2 days ago       Up 2 days               8080/tcp, 0.0.0.0:8082->8082/tcp, :::8082->8082/tcp                                                                                                          eceproject-project-r3anqe-imgproxy-1
-48a074f1bf43   redis:7                                           "docker-entrypoint.s…"   2 days ago       Up 2 days               6379/tcp                                                                                                                                                     dokploy-redis.1.8v4iex3wudonp148xbv954uj1
-5c93d028ffcd   postgres:16                                       "docker-entrypoint.s…"   2 days ago       Up 2 days               5432/tcp                                                                                                                                                     dokploy-postgres.1.kfidxl89ttm147dtgbx4sbya1
-db3ed6ff9f8f   mattermost/focalboard:latest                      "/opt/focalboard/bin…"   8 days ago       Up 2 days                                                                                                                                                                            focalboard
-bd2df15a8e59   postgres:17                                       "docker-entrypoint.s…"   8 days ago       Up 2 days (healthy)     5432/tcp                                                                                                                                                     power-stack-coder-iqmfdk-db-1
-632e08a4c59e   traefik:v3.5.0                                    "/entrypoint.sh trae…"   11 days ago      Up 2 days               0.0.0.0:80->80/tcp, :::80->80/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp, 0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 0.0.0.0:443->443/udp, :::443->443/udp   dokploy-traefik
-USER@colab-1-
+{
+    "totalViews": 9,
+    "uniqueVisitors": 1,
+    "bounceRate": 0,
+    "avgVisitTime": "3m15s",
+    "trafficQualityScore": 100,
+    "avgLcp": 0,
+    "avgCls": 0,
+    "avgFid": 0,
+    "topPages": [
+        {
+            "value": "https://anivault.getmusterup.com/",
+            "count": 3
+        },
+        {
+            "value": "https://anivault.getmusterup.com/downloads",
+            "count": 2
+        },
+        {
+            "value": "https://anivault.getmusterup.com/anime/8cc2ee7c-f1e4-b67a-9799-2533ce21a51b?animeTitle=Durarara!!",
+            "count": 2
+        },
+        {
+            "value": "https://anivault.getmusterup.com/login",
+            "count": 2
+        }
+    ],
+    "topReferrers": [
+        {
+            "value": "",
+            "count": 9
+        }
+    ],
+    "topBrowsers": [
+        {
+            "value": "Chrome",
+            "count": 9
+        }
+    ],
+    "topOS": [
+        {
+            "value": "Windows",
+            "count": 9
+        }
+    ],
+    "topCountries": [
+        {
+            "value": "NG",
+            "count": 9
+        }
+    ]
+}
