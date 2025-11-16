@@ -74,21 +74,32 @@ const SessionReplay = () => {
             if (selectedSite && selectedSession && playerLoaded && window.rrwebPlayer) {
                 setLoadingEvents(true);
                 try {
-                    const events = await api.getSessionEvents(selectedSite.id, selectedSession);
+                    const fetchedEvents = await api.getSessionEvents(selectedSite.id, selectedSession);
+                    const events = Array.isArray(fetchedEvents) ? fetchedEvents : [];
+                    
                     if (playerRef.current) {
                         playerRef.current.innerHTML = ''; // Clear previous player
-                        new window.rrwebPlayer({
-                            target: playerRef.current,
-                            props: {
-                                events,
-                                width: playerRef.current.clientWidth,
-                                height: 600, // Adjust as needed
-                                autoPlay: true,
-                            },
-                        });
+                        
+                        if (events.length > 0) {
+                            new window.rrwebPlayer({
+                                target: playerRef.current,
+                                props: {
+                                    events,
+                                    width: playerRef.current.clientWidth,
+                                    height: 600, // Adjust as needed
+                                    autoPlay: true,
+                                },
+                            });
+                        } else {
+                            // Optionally, display a message if there are no events for the session
+                            playerRef.current.innerHTML = '<div class="flex items-center justify-center h-64 text-slate-400">No events recorded for this session.</div>';
+                        }
                     }
                 } catch (error) {
                     console.error("Failed to fetch session events:", error);
+                    if (playerRef.current) {
+                        playerRef.current.innerHTML = '<div class="flex items-center justify-center h-64 text-red-400">Failed to load session events.</div>';
+                    }
                 } finally {
                     setLoadingEvents(false);
                 }
