@@ -82,6 +82,7 @@ const SessionReplay = () => {
                                 events,
                                 width: playerRef.current.clientWidth,
                                 height: 600, // Adjust as needed
+                                autoPlay: true,
                             },
                         });
                     }

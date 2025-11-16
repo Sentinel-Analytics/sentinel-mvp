@@ -13,25 +13,27 @@
     rrwebScript.src = 'https://cdn.jsdelivr.net/npm/rrweb@latest/dist/rrweb.min.js';
     document.head.appendChild(rrwebScript);
 
-    // Inject web-vitals
-    const webVitalsScript = document.createElement('script');
-    webVitalsScript.type = 'module';
-    webVitalsScript.textContent = `
-        import { onCLS, onFID, onLCP } from 'https://unpkg.com/web-vitals@4?module';
-        
-        const sendVitals = ({ name, value }) => {
-            // This function will be defined later in the main script
-            window.trackWebVitals({ [name]: value });
-        };
-
-        onCLS(sendVitals, { reportAllChanges: true });
-        onFID(sendVitals, { reportAllChanges: true });
-        onLCP(sendVitals, { reportAllChanges: true });
-    `;
-    document.head.appendChild(webVitalsScript);
+    // Dynamically import and initialize web-vitals
+    const initWebVitals = () => {
+        import('https://unpkg.com/web-vitals@4?module')
+            .then(({ onCLS, onFID, onLCP }) => {
+                const sendVitals = ({ name, value }) => {
+                    window.trackWebVitals({ [name]: value });
+                };
+                onCLS(sendVitals);
+                onFID(sendVitals);
+                onLCP(sendVitals);
+            })
+            .catch(err => {
+                console.error('Sentinel: Failed to load web-vitals library.', err);
+            });
+    };
 
 
     rrwebScript.onload = function() {
+        // Start Web Vitals monitoring
+        initWebVitals();
+
         let events = [];
         let lastUrl = location.href;
 
