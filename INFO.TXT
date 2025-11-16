@@ -1,38 +1,8 @@
-00 (Bad Request)
-(anonymous) @ index-FWVEuoYO.js:132
-xhr @ index-FWVEuoYO.js:132
-Bp @ index-FWVEuoYO.js:134
-_request @ index-FWVEuoYO.js:135
-request @ index-FWVEuoYO.js:134
-(anonymous) @ index-FWVEuoYO.js:130
-fe @ index-FWVEuoYO.js:135
-addFirewallRule @ index-FWVEuoYO.js:135
-x @ index-FWVEuoYO.js:152
-Tm @ index-FWVEuoYO.js:48
-(anonymous) @ index-FWVEuoYO.js:48
-kh @ index-FWVEuoYO.js:48
-Ou @ index-FWVEuoYO.js:48
-Yu @ index-FWVEuoYO.js:49
-o1 @ index-FWVEuoYO.js:49Understand this error
-index-FWVEuoYO.js:135 API request to /api/firewall?siteId=87a3e9d5-ad73-4400-9e4b-364eccb0b493 failed: ht {message: 'Request failed with status code 400', name: 'AxiosError', code: 'ERR_BAD_REQUEST', config: {…}, request: XMLHttpRequest, …}
-fe @ index-FWVEuoYO.js:135
-await in fe
-addFirewallRule @ index-FWVEuoYO.js:135
-x @ index-FWVEuoYO.js:152
-Tm @ index-FWVEuoYO.js:48
-(anonymous) @ index-FWVEuoYO.js:48
-kh @ index-FWVEuoYO.js:48
-Ou @ index-FWVEuoYO.js:48
-Yu @ index-FWVEuoYO.js:49
-o1 @ index-FWVEuoYO.js:49Understand this error
-index-FWVEuoYO.js:152 Invalid rule type. Must be 'ip', 'country', or 'asn'
-
-siteId
-87a3e9d5-ad73-4400-9e4b-364eccb0b493
-{rule_type: "country", value: "NG"}
-rule_type
-: 
-"country"
-value
-: 
-"NG"
+tracker-v4.js:49  POST https://api-sentinel.getmusterup.com/track 403 (Forbidden)
+track @ tracker-v4.js:49
+rrwebScript.onload @ tracker-v4.js:67
+script
+(anonymous) @ tracker-v4.js:12
+(anonymous) @ tracker-v4.js:117Understand this error
+tracker-v4.js:113 Sentinel session recording error: TypeError: Failed to fetch
+    at tracker-v4.js:99:17

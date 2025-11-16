@@ -8,6 +8,7 @@ const SessionReplay = () => {
     const [sessions, setSessions] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
     const [loadingEvents, setLoadingEvents] = useState(false);
+    const [playerLoaded, setPlayerLoaded] = useState(false);
 
     useEffect(() => {
         const fetchSites = async () => {
@@ -56,7 +57,7 @@ const SessionReplay = () => {
             document.body.appendChild(script);
 
             script.onload = () => {
-                // Player is ready
+                setPlayerLoaded(true); // Signal that the player script is ready
             };
 
             return () => {
@@ -70,7 +71,7 @@ const SessionReplay = () => {
 
     useEffect(() => {
         const fetchAndPlaySession = async () => {
-            if (selectedSite && selectedSession && window.rrwebPlayer) {
+            if (selectedSite && selectedSession && playerLoaded && window.rrwebPlayer) {
                 setLoadingEvents(true);
                 try {
                     const events = await api.getSessionEvents(selectedSite.id, selectedSession);
@@ -94,7 +95,7 @@ const SessionReplay = () => {
             }
         };
         fetchAndPlaySession();
-    }, [selectedSite, selectedSession, window.rrwebPlayer]);
+    }, [selectedSite, selectedSession, playerLoaded]);
 
     return (
         <div className="container mx-auto p-4">
