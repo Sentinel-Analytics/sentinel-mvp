@@ -51,7 +51,7 @@ const SessionReplay = () => {
 
             // Inject Script
             const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/rrweb-player';
+            script.src = 'https://cdn.jsdelivr.net/npm/rrweb-player@latest/dist/index.js';
             script.async = true;
             document.body.appendChild(script);
 

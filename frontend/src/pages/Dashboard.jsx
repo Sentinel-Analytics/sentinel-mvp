@@ -128,6 +128,14 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
+    if (selectedSite) {
+      localStorage.setItem("siteId", selectedSite.id)
+    } else {
+      localStorage.removeItem("siteId")
+    }
+  }, [selectedSite])
+
+  useEffect(() => {
     let intervalId
     if (selectedSite) {
       fetchDashboardData(selectedSite.id)
